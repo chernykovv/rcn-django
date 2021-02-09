@@ -1,0 +1,42 @@
+{% extends 'admin/change_form.html' %} {% load i18n %} 
+
+
+{% block field_sets %}
+
+    {% for fieldset in adminform %}
+        {% include "admin/includes/fieldset.html" %}
+    {% endfor %}
+    <div style="padding: 20px 100px; background-color: #F6F7F8">
+        {% if file_links %}
+        <h2 style="color: #555">Files: </h2>
+        <p style="padding: 0 30px; margin: 0; color: #000">
+                <ul>
+            {% for file in file_links %}
+            
+                <li style="list-style: none;">
+                        {{ file.image }}
+                </li>
+           
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <h2 style="color: #555">Admin email: </h2><p style="padding: 0 30px; margin: 0; color: #000">{{ email }}</p>
+       
+    </div>
+   
+    <section style="padding: 0 100px; background-color: #F6F7F8;">
+    
+    {% for q in questions %}
+        <br>
+        <h3 style="color: #555">
+            {{ q.question }}
+        </h3>
+        
+        <h4 style="padding: 0 30px; color: #000">
+            {{ q.answer }}
+        </h4>
+        <br>
+        
+    {% endfor %}
+    </section>
+{% endblock %}

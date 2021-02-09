@@ -1,0 +1,20 @@
+<ul class='no-list'>
+
+    <li class='top-level list-header'>Topics</li>
+
+    <li class='{% if all_articles %}active{% endif %}'>
+        <a href='/news/{{ page.get_news_page.slug }}'>All Articles</a>
+    </li>
+
+    {% for item in page.article_tag_list %}
+        <li class='{% ifequal current_tag.slug item.slug %}active{% endifequal %}'>
+
+            <a class='{% if forloop.first %}first{% endif %}{% if forloop.last %}last{% endif %}'
+               href='/news/{{ page.slug }}/tag={{ item.slug }}'>
+                {{ item.label }}
+            </a>
+
+        </li>
+    {% endfor %}
+
+</ul>

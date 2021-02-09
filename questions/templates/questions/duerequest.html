@@ -1,0 +1,323 @@
+{% extends 'detail_pages/detail_base.html' %}
+{% load front_tags %}
+{% load staticfiles %}
+{% block extra-head %}
+{{ block.super }}
+<link type="text/css" rel="stylesheet" href="{% static "questions/css/questions.css" %}">
+<style media="screen">
+  #content-wrapper .large-form .btn {
+    float: none;
+    margin-top: 20px;
+}
+ #content-wrapper .large-form .input-wrapper input[type='email'] {
+   border: 1px solid #ccc;
+   height: 34px;
+ }
+ .invalid{
+   border: 1px solid red !important;
+ }
+
+ strong{
+   color: #7E9DBD;
+    text-transform: uppercase;
+    font-size: 18px;
+ }
+    </style>
+{% endblock %}
+
+{% block detail-content %}
+
+<div class='container'>
+
+  <div class='row'>
+
+    <div id='section-copy-wrapper' class='col-xs-7'>
+
+      <div class='row'>
+
+        <div class='section-copy col-xs-12'>
+          <div class='clearfix'></div>
+          <div id='due-form-wrapper' class='large-form'>
+            <div class="title-wrapper">
+              <h2>DUES STATUS REQUEST</h2>
+            </div>
+
+            <form id="regForm" action="" method="POST">{% csrf_token %}
+
+              <div class="tab">
+                <strong style="color: #7E9DBD"> Title Company </strong>
+                <div class="clearfix"></div>
+                <div class='input-wrapper left'>
+                  <label for='id_first_name'>First Name</label>
+                  <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+                  <input name="firstname" class="form-control need_valid" required >
+                </div>
+
+                <div class='input-wrapper right'>
+                  <label for='id_last_name'>Last Name</label>
+                  <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+                  <input name="lastname" class="form-control need_valid" required >
+                </div>
+                <div class="clearfix"></div>
+                <div class='input-wrapper left'>
+                  <label for='id_first_name'>Company Name</label>
+                  <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+                  <input name="compnay" class="form-control need_valid" required >
+                </div>
+
+                <div class='input-wrapper right'>
+
+                  <label for='id_phone'>Phone Number</label>
+
+                  <input  onblur="validPhonen(this)" id="id_phone" name="phone" class="form-control need_valid" required type="tel" >
+   <p id="err_phone" style="display:none; color: red;">Invalid phone. Valid formats: (123) 456-7890, 1234567890</p>
+
+                </div>
+
+                <div class="clearfix"></div>
+                <div class='input-wrapper left'>
+
+                  <label for='id_email'>Email</label>
+                  <p id="err_email" style="display:none; color: red;">Invalid email</p>
+                  <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+                  <input  id="id_email" name="email" type="email" class="form-control need_valid" required>
+                </div>
+
+                <div class='input-wrapper right'>
+
+                  <label for='id_last_name'>Date of Request</label>
+                  <input name="created_at" type="date" id="date_request" class="form-control need_valid" required>
+
+                </div>
+
+                <div class="clearfix notvalidnow"></div>
+
+              </div>
+
+              <div class="tab">
+                <strong style="color: #7E9DBD"> Property Information </strong>
+
+                <div class="clearfix"></div>
+                <br>
+                <div class="form-group">
+                  <label>{{ form.neighborhood.label }}</label>
+                  <p id="sel_val" style="display:none; color: red;">Select value</p>
+                  {{ form.neighborhood }}
+                </div>
+
+
+                <div class='input-wrapper left'>
+                  <label for='id_first_name'>Lot</label>
+                  <input name="lot" class="form-control need_valid" required>
+                </div>
+
+                <div class='input-wrapper right'>
+                  <label for='id_last_name'>Property Address</label>
+                  <input name="address" class="form-control need_valid" required>
+                </div>
+
+                <div class='input-wrapper left'>
+                  <label for='id_first_name'>City</label>
+                  <input name="city" class="form-control need_valid" required>
+                </div>
+
+                <div class='input-wrapper right'>
+                  <label for='id_last_name'>State</label>
+                  <input name="state" class="form-control need_valid" required>
+                </div>
+
+                <div class='input-wrapper left'>
+                  <label for='id_first_name'>Zip</label>
+                  <input type="number" name="zip" class="form-control need_valid" required>
+                </div>
+                <div class="clearfix"></div>
+              </div>
+
+              <div class="tab" id="third">
+                <strong style="color: #7E9DBD"> Buyer / Seller Information </strong>
+                <div class="clearfix"></div>
+                <div class='input-wrapper left'>
+                  <label for='id_first_name'>Owner/Seller Name</label>
+                  <input name="owner_seller" class="form-control need_valid" required>
+                </div>
+
+                <div class='input-wrapper right'>
+                  <label for='id_last_name'>Buyer Name</label>
+                  <input name="buyer" class="form-control need_valid" required>
+                </div>
+
+                <div class='input-wrapper left'>
+                  <label for='id_first_name'>Proposed Closing Date</label>
+                  <input type="date" id ="closing_date" name="closing_date" class="form-control need_valid" required>
+                </div>
+
+                <div class='input-wrapper right'>
+                  <label for='id_last_name'>Date Needed By</label>
+                  <input type="date" id="needed_by" name="needed_by" class="form-control need_valid" required>
+                </div>
+                <div class="clearfix"></div>
+              </div>
+
+              <div class="tab">
+                <strong style="color: #7E9DBD">General Informatio</strong>
+                <br>
+                  <br>
+                <label for='id_last_name'> Additional comments? </label>
+                <textarea name="comment" rows="8" cols="80"></textarea>
+                <div class="clearfix"></div>
+
+              </div>
+
+              <div style="text-align:center;margin-top:10px;">
+                <span class="step"></span>
+                <span class="step"></span>
+                <span class="step"></span>
+                <span class="step"></span>
+              </div>
+
+              <div style="overflow:auto;">
+                <div>
+                  <button style="float:left;" class="info btn" type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+                  <button style="float:right;" class="info btn" type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class='clearfix'></div>
+          <div class='clearfix'></div>
+
+          {% ifequal template_add_on 'faq' %}
+          <div id='template-add-on'>
+
+            {% include 'snippets/faq_addon.html' %}
+
+          </div>
+          {% endifequal %}
+
+          <div class='clearfix'></div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div id='small-col-copy-wrapper' class='col-xs-5'>
+
+      <h2>Title Companies - Please Read</h2>
+
+      <p>Please complete the following steps to receive a current dues status report for a property in a&nbsp;Real Clear Neighborhoods managed neighborhood:</p>
+
+      <p>1. Complete all fields in the form on this page</p>
+
+      <p>2. Submit form</p>
+
+      <p>3. Get Report</p>
+
+      <p>Due to the volume of requests we receive daily, phone and email requests for these reports will no longer be accepted.&nbsp;</p>
+      <div class="clearfix"></div>
+      <div class="clearfix"></div>
+      <div class="clearfix"></div>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<div id='dialog-placeholder'>
+<div class='dialog-mask'></div>
+<div class='dialog-wrapper border-box'>
+  <div class='title-wrapper'>
+      <h1>Success!</h1>
+  </div>
+  <div class='copy-wrapper'>
+      <h2>Your Request Has Been Sent</h2>
+<p>We&rsquo;ll reach out within 24 - 48 hours to resolve your inquiry.</p>
+
+<p><a class="btn info" onclick="window.location.reload()">Continue</a></p>
+
+
+  </div>
+
+</div>
+</div>
+
+<script type="text/javascript">
+
+
+  function validPhonen(element) {
+      if (element.value == "") {
+          element.className += " invalid";
+          element.nextElementSibling.style.display = 'block';
+      } else {
+          element.className = "form-control need_valid";
+          element.nextElementSibling.style.display = 'none';
+          if (validatePhone(element.value)) {
+              document.getElementById("err_phone").style.display = 'none';
+              element.className = "form-control need_valid";
+          } else {
+              document.getElementById("err_phone").style.display = 'block';
+              element.className += " invalid";
+          }
+      }
+  }
+    $("#id_neighborhood").prop('selectedIndex', 0);
+
+
+
+
+
+function doSubmitRequest(){
+
+  var frm = $('#regForm');
+//  alert(frm.attr('action'));
+      $.ajax({
+          type: 'post',
+          url:'/dues-status-request',
+          data: frm.serialize(),
+          success: function (data) {
+
+          },
+          error: function (data) {
+              //ajaxError()
+          }
+      });
+
+
+      displaySuccess()
+      setTimeout(function(){
+        window.location.reload();
+      },3500)
+}
+
+function requestDate() {
+    var d = new Date(),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
+$('#date_request').val(requestDate());
+  $('#needed_by').val(requestDate());
+  $('#closing_date').val(requestDate());
+</script>
+
+{% endblock %}
+
+{% block user-actions %}
+
+{{ block.super }}
+
+<span class='left'>
+  <a onclick='displaySuccess();'>edit success message</a>
+</span>
+
+{% endblock %}

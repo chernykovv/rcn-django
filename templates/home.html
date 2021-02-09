@@ -1,0 +1,337 @@
+{% extends 'base.html' %}
+{% load front_tags %}
+
+
+{% block extra-head %}
+
+    <link type='text/css' rel='stylesheet' href='/static/css/flexslider.css'>
+    <link type='text/css' rel='stylesheet' href='/static/css/home.css'>
+
+    <script type='text/javascript' src='/static/js/jquery.flexslider-min.js'></script>
+    <script type='text/javascript'>
+
+        $(document).ready(function () {
+
+            $('.billboards').flexslider({
+                animation: 'fade',
+                prevText: '',
+                nextText: '',
+                touch: false,
+                pauseOnHover: false
+            });
+
+            $('.slide-show').flexslider({
+                slideshow: false,
+                animation: 'fade',
+                prevText: '',
+                nextText: '',
+                touch: false,
+                pauseOnHover: false
+            });
+
+        });
+
+    </script>
+
+    {% front_edit_scripts editor='ckeditor' %}
+
+{% endblock %}
+
+
+{% block content %}
+
+    {% for item in sections %}
+
+        {% ifequal item.template 'billboard' %}
+            <div id='billboard' class="flexslider billboards">
+
+                <ul class="slides">
+
+                    {% for billboard in billboards %}
+                        <li style="background-image: url('{{ billboard.image }}');">
+
+                            <div class='transparent-overlay'></div>
+
+                            <div class='container'>
+
+                                <div class='slide-content'>
+
+                                    <h1>{{ billboard.header }}</h1>
+
+                                    <h2>{{ billboard.sub_header }}</h2>
+
+                                </div>
+
+                            </div>
+
+                        </li>
+                    {% endfor %}
+
+                </ul>
+
+            </div>
+        {% endifequal %}
+
+        {% ifequal item.template 'mini_billboard' %}
+            <div id='mini-billboards' class='home-section col-xs-12 {% ifequal item.background_size 'c' %}cover-background{% endifequal %}' style='background-image: url("{{ item.image_background }}");'>
+
+                <div class='container'>
+
+                    <div class='row'>
+
+                        {% for billboard in mini_billboards %}
+                            <div class='mini-billboard col-xs-4'>
+
+                                {% if billboard.link %}
+                                    <a href='{{ billboard.link }}'>
+                                {% endif %}
+
+                                <img src='{{ billboard.image }}'>
+
+                                <div class='copy'>
+
+                                    <h3>{{ billboard.label }}</h3>
+
+                                </div>
+
+                                {% if billboard.link %}
+                                    </a>
+                                {% endif %}
+
+                                <div class='clear-both'></div>
+
+                            </div>
+
+                        {% endfor %}
+
+                        <div class='clear-both'></div>
+
+                    </div>
+
+                    <div class='clear-both'></div>
+
+                </div>
+
+            </div>
+        {% endifequal %}
+
+        {% ifequal item.template 'slide' %}
+            <div class='home-section slide-show-section col-xs-12 {% ifequal item.background_size 'c' %}cover-background{% endifequal %}' style='background-image: url("{{ item.image_background }}");'>
+
+                <div class='container'>
+
+                    <div class='row'>
+
+                        {% ifequal item.slide_position 'l' %}
+
+                            <div class='col-xs-6'>
+
+                                <div class='flexslider slide-show positioned-left'>
+
+                                    <ul class='slides'>
+
+                                        {% for slide in item.images %}
+                                            <li>
+                                                <img src='{{ slide.image }}'>
+                                            </li>
+                                        {% endfor %}
+
+                                    </ul>
+
+                                </div>
+
+                            </div>
+
+                            <div class='col-xs-1'></div>
+
+                        {% endifequal %}
+
+                        <div class='copy col-xs-5'>
+
+                            {% front_edit 'home-section-slide-show' item.id %}
+
+                                <h2>Header Text</h2>
+                                <p>
+                                    Dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt labore et dolore magna aliqua. Ut enim ad minim. Dolor sit amet,
+                                    consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+                                </p>
+
+                                <p class='btn info'><a href='/'>Button</a></p>
+
+                            {% end_front_edit %}
+
+                        </div>
+
+                        {% ifequal item.slide_position 'r' %}
+
+                            <div class='col-xs-1'></div>
+
+                            <div class='col-xs-6'>
+
+                                <div class='flexslider slide-show positioned-right'>
+
+                                    <ul class='slides'>
+
+                                        {% for slide in item.images %}
+                                            <li>
+                                                <img src='{{ slide.image }}'>
+                                            </li>
+                                        {% endfor %}
+
+                                    </ul>
+
+                                </div>
+
+                            </div>
+
+                        {% endifequal %}
+
+                    </div>
+
+                </div>
+
+            </div>
+        {% endifequal %}
+
+        {% ifequal item.template '2_col' %}
+            <div class='home-section free-form col-xs-12 {% ifequal item.background_size 'c' %}cover-background{% endifequal %}' style='background-image: url("{{ item.image_background }}");'>
+
+                <div class='container'>
+
+                    <div class='row'>
+
+                        <div class='section-header col-xs-12'>
+
+                            {% front_edit 'home-section-header' item.id %}
+
+                                <h1>Double Click to Edit</h1>
+
+                            {% end_front_edit %}
+
+                        </div>
+
+                        <div class='col-xs-6'>
+
+                            {% front_edit 'home-section-left-col' item.id %}
+
+                                <p>
+                                    Once logged in, you can edit copy like this one by simply double clicking. It's that simple. Lorem ipsum dolor sit amet, consectetur adipiscing
+                                    elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
+                                    ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+                                </p>
+
+                            {% end_front_edit %}
+
+                        </div>
+
+                        <div class='col-xs-6'>
+
+                            {% front_edit 'home-section-right-col' item.id %}
+
+                                <p>
+                                    Once logged in, you can edit copy like this one by simply double clicking. It's that simple. Lorem ipsum dolor sit amet, consectetur adipiscing
+                                    elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
+                                    ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+                                </p>
+
+                            {% end_front_edit %}
+
+                        </div>
+
+                        <div class='col-xs-12 call-to-action' style='text-align: center'>
+
+                            {% front_edit 'home-section-call-to-action' item.id %}
+
+                                <p class='btn info'><a href='/'>Action Button</a></p>
+
+                            {% end_front_edit %}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        {% endifequal %}
+
+        {% ifequal item.template 'benefit_group' %}
+            <div id='benefit-groups' class='home-section col-xs-12 {% ifequal item.background_size 'c' %}cover-background{% endifequal %}' style='background-image: url("{{ item.image_background }}");'>
+
+                <div class='container'>
+
+                    <div class='row'>
+
+                        <div class='section-header col-xs-12'>
+
+                            {% front_edit 'home-section-header' item.id %}
+
+                                <h1>Double Click to Edit</h1>
+
+                            {% end_front_edit %}
+
+                        </div>
+
+                        {% for group in benefit_groups %}
+                            <div class='benefit-group-wrapper col-xs-4'>
+
+                                <div class='benefit-group'>
+
+                                    <img src='{{ group.image }}'>
+
+                                    <div class='copy'>
+
+                                        {% front_edit 'home-section-benefit-group' group.id %}
+
+                                            <h3>Label Here</h3>
+                                            <p>Dolor sit amet, consectetur a ipisicing elit, sed do eiusmod.</p>
+
+                                        {% end_front_edit %}
+
+                                    </div>
+
+                                </div>
+
+                                <div class='clear-both'></div>
+
+                            </div>
+
+                        {% endfor %}
+
+                        <div class='clear-both'></div>
+
+                    </div>
+
+                    <div class='clear-both'></div>
+
+                </div>
+
+            </div>
+        {% endifequal %}
+
+    {% endfor %}
+
+{% endblock %}
+
+
+{% if active_user %}
+    {% block user-actions %}
+
+        <span class='left'>
+            <a onclick='displayManageWindow("/admin/home_content/homesection/")'>sections</a>
+        </span>
+
+        <span class='left'>
+            <a onclick='displayManageWindow("/admin/home_content/billboard/")'>billboards</a>
+        </span>
+
+        <span class='left'>
+            <a onclick='displayManageWindow("/admin/home_content/minibillboard/")'>mini billboards</a>
+        </span>
+
+        <span class='left'>
+            <a onclick='displayManageWindow("/admin/home_content/benefitgroup/")'>benefit groups</a>
+        </span>
+
+    {% endblock %}
+{% endif %}

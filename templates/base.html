@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+{% load front_tags %}
+
+<html>
+
+<head>
+
+    <title>{% block page-title %}Welcome{% endblock %} | Real Clear Neighborhoods</title>
+
+    <!-- META -->
+    <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
+    {% block meta_description %}
+        <meta name='description' content='Real Clear Neighborhoods'>
+    {% endblock %}
+    <meta name='robots' content='index, follow'>
+    <meta name='Revisit-after' content='15 Days'>
+    <meta name="csrftoken" content="{{ csrf_token }}">
+    <!-- FAV/SOCIAL ICONS -->
+    <link rel="SHORTCUT ICON" href="/static/images/favicon.ico">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/css/bootstrap-theme.min.css">
+    <link type='text/css' rel='stylesheet' href='/static/css/base.css'>
+    <link type='text/css' rel='stylesheet' href='/static/css/nav.css'>
+    <link type='text/css' rel='stylesheet' href='/static/css/front_overrides.css'>
+
+    <!-- FONTS -->
+    <link href='https://fonts.googleapis.com/css?family=Raleway:400,300|Merriweather:400,300,300italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+
+    <!-- SCRIPTS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+    <script type='text/javascript' src="/static/js/menu.js"></script>
+    <script type='text/javascript' src="/static/js/user_actions.js"></script>
+    <script type='text/javascript' src="/static/js/ckeditor/ckeditor.js"></script>
+
+    <script type='text/javascript'>
+
+
+    </script>
+
+    {% block extra-head %}
+
+    {% endblock %}
+
+</head>
+
+<body {% block body-id %}{% endblock %}>
+
+<!-- HEADER -->
+<div id='header-wrapper' class='navbar wrapper' role='navigation'>
+
+    <div id='header' class='container'>
+
+        <a id="logo" href="/">
+            <img src="/media/uploads/logo.png" alt="">
+        </a>
+
+        <ul class="nav navbar-nav">
+         {% for menu in pages_menu%}
+
+               {% if menu.submenu|length > 1 %}
+               <li class="top-level dropdown">
+                   <a class="top-level" href="{{menu.field.link}}">
+                       {{menu.field.title}}
+                   </a>
+                     <ul class="dropdown-menu">
+                 {% for sub in menu.submenu %}
+                 <li class="sub-level">
+                     <a class="sub-level" href="{{sub.link}}">
+                         {{sub.title}}
+                     </a>
+                 </li>
+                 {% endfor %}
+               </ul>
+               </li>
+               {% else %}
+                 <li class="top-level">
+                     <a class="top-level" href="{{menu.field.link}}">
+                         {{menu.field.title}}
+                     </a>
+                 </li>
+               {% endif %}
+         {% endfor %}
+
+         <li class="top-level last">
+                <a class="btn" href="/payment/">Payment</a>
+            </li>
+            
+        </ul>
+
+        {% include 'snippets/mobile_nav.html' %}
+
+        <div class='hamburger' onclick='toggleMobileMenu();'>
+
+            <span></span>
+            <span></span>
+            <span></span>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- END HEADER -->
+
+<!-- CONTENT -->
+<div id='content-wrapper' class='wrapper'>
+
+    {% block content %}
+
+
+    {% endblock %}
+
+</div>
+<!-- END CONTENT -->
+
+<!-- FOOTER -->
+
+
+    <div id='footer-wrapper' class='wrapper'>
+
+        <div class="container">
+
+            <div class="row">
+
+                <div class="left-col col-xs-7">
+
+                    <div class="left-col-copy">
+
+                        <h2>REAL CLEAR NEIGHBORHOODS</h2>
+
+<p>We provide our homeowners with tools, resources, and platforms in which they can share and strengthen their neighborhoods and maximize the property values within the entire community.&nbsp;</p>
+
+<p>&nbsp;</p>
+
+<p>Real Clear Neighborhoods has a single-minded purpose that permeates everything we stand for, and everything we do. That purpose is to increase the quality of life of each member of the associations we serve. We do that by coupling person-to-person customer service with the systems we have designed. We have developed a platform that choreographs the dynamic interactions between the community and the people that reside in it.</p>
+
+
+                    </div>
+
+                    <div class="social-icons">
+
+
+                            <a href="https://www.facebook.com/RCNeighborhoods" target="_blank">
+                                <img src="/media/uploads/facebook-64px.png">
+                            </a>
+
+                            <a href="https://twitter.com/RCNeighborhoods" target="_blank">
+                                <img src="/media/uploads/twitter-64px.png">
+                            </a>
+
+                            <a href="https://www.linkedin.com/company/real-clear-neighborhoods" target="_blank">
+                                <img src="/media/uploads/linkedin-64px.png.png">
+                            </a>
+
+
+                    </div>
+
+                    <div class="clear-both"></div>
+
+                </div>
+
+                <div class="col-xs-1"></div>
+
+                <div class="right-col col-xs-4">
+
+                    <div class="right-col-copy">
+
+                        <h2>Get in Touch</h2>
+
+                            <ul>
+                                <li>4200 Gabel Dr</li>
+                                <li>Fayetteville, AR 72703</li>
+                                <li>Office: (479)&nbsp;935-8989</li>
+                                <li>Toll Free: (888) 958-7725</li>
+                            </ul>
+
+                            <p><a href="mailto:info@realclearneighborhoods.com">info@realclearneighborhoods.com</a></p>
+
+                            <p>&nbsp;</p>
+
+
+                    </div>
+
+                    <div class="clear-both"></div>
+
+                </div>
+
+                <div class="copyright col-xs-12">
+
+                    <p>©2019&nbsp;Real Clear Neighborhoods, Inc. • All Rights Reserved •</p>
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+<!-- END FOOTER -->
+
+<!-- USER ACTIONS -->
+{% if active_user %}
+    <div id='user-actions-wrapper' class='wrapper'>
+
+        <div id='ellipsis' onclick='toggleUserActions()'>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <div class='user-actions'>
+
+            <span class='left'>
+                Welcome back, <a href='/admin/'>{{ active_user.username }}</a>
+            </span>
+
+            <span class='left logout'>
+                <a href='/admin/logout/'>logout</a>
+            </span>
+
+        </div>
+
+        <div class='more-actions'>
+
+            <span class='left'>
+                <a onclick='displayManageWindow("/admin/navigation/primarynavigation/")'>navigation</a>
+            </span>
+
+            <span class='left break'>
+                <a onclick='displayManageWindow("/admin/page_content/webpage/")'>pages</a>
+            </span>
+
+            {% block user-actions %}{% endblock %}
+
+        </div>
+
+    </div>
+
+    <div id='user-manage-wrapper'>
+
+        <div id='mask' onclick='hideManageWindow()'></div>
+
+        <div id='user-manage-dialog'>
+
+            <div id='user-manage-content'></div>
+
+            <div class='clear-both'></div>
+
+            <div id='user-manage-buttons'>
+
+                <span class='btn warning left' onclick='hideManageWindow()'>Cancel</span>
+                <span class='btn info left' onclick='saveManageWindow()'>Refresh Page</span>
+
+            </div>
+
+        </div>
+
+    </div>
+{% endif %}
+<!-- END USER ACTIONS -->
+
+{% block extra-content %}
+
+
+{% endblock %}
+
+<script>
+if($(location).attr("href").split('/').pop()=='homeowners-neighborhoods'){
+  $("#in-page-nav ul").find('a[href="/homeowners-new-owner/"]').parent().remove();
+}
+</script>
+</body>
+
+</html>

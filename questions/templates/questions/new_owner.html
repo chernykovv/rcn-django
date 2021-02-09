@@ -1,0 +1,126 @@
+{% extends 'detail_pages/col_free.html' %}
+{% load front_tags %}
+{% load staticfiles %}
+
+{% block extra-head %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static "questions/css/questions.css" %}">
+{% endblock %}
+
+
+{% block detail-content-left %}
+
+    <div id="in-page-nav" class="col-md-10">
+        <ul class="no-list">
+            <li class="top-level list-header">Homeowners</li>
+            <li class="">
+                <a class="first" href="/homeowners-neighborhoods">
+                    Neighborhoods
+                </a>
+            </li>
+            <li class="">
+                <a class="first" href="{% url 'violation_view' %}">
+                    Report a Violation
+                </a>
+            </li>
+            <li class="">
+                <a class="" href="{% url 'maintenance_view' %}">
+                    Maintenance Request
+                </a>
+            </li>
+            <li class="">
+                <a class="last" href="{% url 'review_view' %}">
+                    Arc Review Request
+                </a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block detail-content-right %}
+<style>
+    textarea {
+        height: 130px;
+    }
+</style>
+<form id="regForm" action="" method="POST">{% csrf_token %}
+
+    <div class="tab">
+        <div class="form-group">
+            <label>{{ form.neighborhood.label }}</label>
+            <p id="sel_val" style="display:none; color: red;">Select value</p>
+            {{ form.neighborhood }}
+        </div>
+        <div class="form-group">
+            <label for="1531567771">First Name</label>
+            <div class="form-group">
+                <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+                <input id="1987879139" onblur="validField(this)" type="text" name="first_name" class="form-control need_valid" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="1285461915">Last Name</label>
+            <div class="form-group">
+                <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+                <input id="246239244" onblur="validField(this)" type="text" name="last_name" class="form-control need_valid" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="1833231179">Address</label>
+            <div class="form-group">
+                <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+                <textarea id="825879076" onblur="validField(this)" name="address" class="form-control need_valid" required></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="23862975">City </label>
+            <div class="form-group">
+                <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+                <input id="1773479104" onblur="validField(this)" type="text" name="city" class="form-control need_valid" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="260417516">State</label>
+            <div class="form-group">
+                <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+                <input id="2091818658" onblur="validField(this)" type="text" name="state" class="form-control need_valid" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="1004437863">Zip</label>
+            <div class="form-group">
+                <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+                <input id="525863091" onblur="validField(this)" type="text" name="zip" class="form-control need_valid" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="2134194570">Email Address</label>
+            <div class="form-group">
+                <p id="err_email" style="display:none; color: red;">Invalid email</p>
+                <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+                <input id="id_email" onblur="validEmail(this)" type="text" name="email" class="form-control need_valid" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="1979251139">Phone</label>
+            <div class="form-group">
+                <p id="err_phone" style="display:none; color: red;">Invalid phone. Valid formats: (123) 456-7890, 1234567890</p>
+                <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+                <input id="id_phone" onblur="validPhone(this)" type="text" name="phone" class="form-control need_valid" required>
+            </div>
+        </div>
+        <input name="type" type="hidden" value="new_owner">
+    </div>
+
+<div style="overflow:auto;">
+  <div style="float:right;">
+    <button class="btn-info btn" type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+    <button class="btn-info btn" type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+  </div>
+</div>
+
+</form>
+
+
+{% endblock %}
+

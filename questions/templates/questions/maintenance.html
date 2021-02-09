@@ -1,0 +1,428 @@
+{% extends 'detail_pages/col_free.html' %}
+{% load front_tags %}
+{% load staticfiles %}
+
+{% block extra-head %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static "questions/css/questions.css" %}">
+{% endblock %}
+
+
+{% block detail-content-left %}
+
+    <div id="in-page-nav" class="col-md-10">
+        <ul class="no-list">
+            <li class="top-level list-header">Homeowners</li>
+            <li class="">
+                <a class="first" href="/homeowners-neighborhoods">
+                    Neighborhoods
+                </a>
+            </li>
+            <li class="">
+                <a class="first" href="{% url 'violation_view' %}">
+                    Report a Violation
+                </a>
+            </li>
+            <li class="active">
+                <a class="" href="{% url 'maintenance_view' %}">
+                    Maintenance Request
+                </a>
+            </li>
+            <li class="">
+                <a class="last" href="{% url 'review_view' %}">
+                    Arc Review Request
+                </a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block detail-content-right %}
+<style>
+    textarea {
+        height: 130px;
+    }
+</style>
+
+<form id="regForm" action="" method="POST">{% csrf_token %}
+
+    <div class="tab">
+        <div class="form-group">
+            <label>{{ form.neighborhood.label }}</label>
+            <p id="sel_val" style="display:none; color: red;">Select value</p>
+            {{ form.neighborhood }}
+        </div>
+        <!-- <div class="form-group">
+            <label>{{ form.info.label }}</label>
+            <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+            {{ form.info }}
+        </div> -->
+        <div class="form-group">
+            <label>{{ form.name.label }}</label>
+            <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+            {{ form.name }}
+        </div>
+        <div class="form-group">
+            <label>{{ form.address.label }}</label>
+            <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+            {{ form.address }}
+        </div>
+        <div class="form-group">
+            <label>{{ form.phone.label }}</label>
+            <p id="err_phone" style="display:none; color: red;">Invalid phone. Valid formats: (123) 456-7890, 1234567890</p>
+            <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+            {{ form.phone }}
+        </div>
+        <div class="form-group">
+            <label>{{ form.email.label }}</label>
+            <p id="err_email" style="display:none; color: red;">Invalid email</p>
+            <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+            {{ form.email }}
+        </div>
+        <input name="type" type="hidden" value="maintenance">
+    </div>
+
+<div class="tab">
+    <div class="form-group">
+        <label for="What area or item in your neighborhood needs attention?">What area or item in your neighborhood needs attention?</label>
+        <div class="form-group cho-margin">
+            <div class="radio">
+                <label>
+                    <input type="radio" class="ch" name="What area or item in your neighborhood needs attention?" value="Clubhouse" required>
+                    Clubhouse
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" class="ch" name="What area or item in your neighborhood needs attention?" value="Street Light" required>
+                    Street Light
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" class="ch" name="What area or item in your neighborhood needs attention?" value="Fence" required>
+                    Fence (common area)
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" class="ch" name="What area or item in your neighborhood needs attention?" value="Gate" required>
+                    Gate (entry)
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" class="ch" name="What area or item in your neighborhood needs attention?" value="Irrigation" required>
+                    Irrigation
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" class="ch" name="What area or item in your neighborhood needs attention?" value="Landscaping" required>
+                    Landscaping
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" class="ch" name="What area or item in your neighborhood needs attention?" value="Playground" required>
+                    Playground
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" class="ch" name="What area or item in your neighborhood needs attention?" value="Pond" required>
+                    Pond
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" class="ch" name="What area or item in your neighborhood needs attention?" value="Pool" required>
+                    Pool
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" class="ch" name="What area or item in your neighborhood needs attention?" value="Sports" required>
+                    Sports Field or Court
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" id="custom_input" data-hx="true" class="ch" name="What area or item in your neighborhood needs attention?" value="other" required>
+                </label>
+                <input onfocus="this.placeholder = ''" class="custom-input" type="text" name="What area or item in your neighborhood needs attention?" placeholder="custom value">
+            </div>
+            <p id="che_val" style="display:none; color: red;">Select value</p>
+        </div>
+    </div>
+</div>
+
+<div class="tab" id="third">
+    <div id="Clubhouse" class="qblock">
+        <div class="form-group">
+            <label for="2020334259">Clubhouse</label>
+        </div>
+        <div class="form-group">
+            <label for="What needs our attention in the Clubhouse?">What needs our attention in the Clubhouse?</label>
+            <div class="form-group">
+                <textarea id="395004226" name="What needs our attention in the Clubhouse?" class="form-control" required></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div id="Fence" class="qblock">
+        <div class="form-group">
+            <label for="1678180405">Fence</label>
+            <div class="form-group">
+                <p class="help-block">Please be as specific as possible. If we can&#x27;t find it, we can&#x27;t fix it.</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="What is the problem with the fence?">What is the problem with the fence?</label>
+            <div class="form-group">
+                <input id="957193611" type="text" name="What is the problem with the fence?" class="form-control" required>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="219035447">Where is the problem located?</label>
+            <div class="form-group">
+                <p class="help-block">Please be as specific as possible. If we can&#x27;t find it, we can&#x27;t fix it.</p>
+                <input id="611879842" type="text" name="Where is the problem located?" class="form-control" required>
+            </div>
+        </div>
+    </div>
+
+    <div id="Gate" class="qblock">
+        <div class="form-group">
+            <label for="614585921">Entry Gate</label>
+            <div class="form-group">
+                <p class="help-block">Please be as specific as possible. If we can&#x27;t find it, we can&#x27;t fix it.</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="1485639121">What is the problem with the gate?</label>
+            <div class="form-group">
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="What is the problem with the gate?" value="stuck open" >
+                        stuck open
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="What is the problem with the gate?" value="will not close" >
+                        will not close
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="What is the problem with the gate?" value="my access card doesn&#x27;t work" >
+                        my access card doesn&#x27;t work
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="What is the problem with the gate?" value="my access code doesn&#x27;t work" >
+                        my access code doesn&#x27;t work
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="What is the problem with the gate?" value="the gate is damaged" >
+                        the gate is damaged
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="What is the problem with the gate?" value="__other_option__" >
+                    </label>
+                    <input onfocus="this.placeholder = ''" class="custom-input" type="text" name="What is the problem with the gate?" placeholder="custom value">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="Irrigation" class="qblock">
+        <div class="form-group">
+            <label for="1733750438">Irrigation System</label>
+            <div class="form-group">
+                <p class="help-block">Please be as specific as possible. If we can&#x27;t find it, we can&#x27;t fix it.</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="Where is the problem with the irrigation system?">Where is the problem with the irrigation system?</label>
+            <div class="form-group">
+                <input id="1706856790" type="text" name="Where is the problem with the irrigation system?" class="form-control" >
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="What is the problem?">What is the problem?</label>
+            <div class="form-group">
+                <input id="110541948" type="text" name="What is the problem?" class="form-control" >
+            </div>
+        </div>
+    </div>
+
+    <div id="Landscaping" class="qblock">
+        <div class="form-group">
+            <label for="789668349">Landscaping</label>
+            <div class="form-group">
+                <p class="help-block">Please be as specific as possible. If we can&#x27;t find it, we can&#x27;t fix it.</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="What is the issue in need of attention?">What is the issue in need of attention?</label>
+            <div class="form-group">
+                <textarea id="530478891" name="What is the issue in need of attention?" class="form-control" ></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="Where is the issue located?">Where is the issue located?</label>
+            <div class="form-group">
+                <p class="help-block">Please be as specific as possible. If we can&#x27;t find it, we can&#x27;t fix it.</p>
+                <input id="162845733" type="text" name="Where is the issue located? " class="form-control" >
+            </div>
+        </div>
+    </div>
+
+    <div id="Playground" class="qblock">
+        <div class="form-group">
+            <label for="1602702210">Playground</label>
+            <div class="form-group">
+                <p class="help-block">Please be as specific as possible. If we can&#x27;t find it, we can&#x27;t fix it.</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="What is the issue with the playground?">What is the issue with the playground?</label>
+            <div class="form-group">
+                <textarea id="2011629770" name="What is the issue with the playground?" class="form-control" ></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div id="Pond" class="qblock">
+        <div class="form-group">
+            <label for="1418042927">Ponds and Retention Areas</label>
+            <div class="form-group">
+                <p class="help-block">Please be as specific as possible. If we can&#x27;t find it, we can&#x27;t fix it.</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="What is the item in need of attention?">What is the item in need of attention?</label>
+            <div class="form-group">
+                <textarea id="908527418" name="What is the item in need of attention?" class="form-control" ></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="Where is the issue located?">Where is the issue located?</label>
+            <div class="form-group">
+                <p class="help-block">Please be as specific as possible. If we can&#x27;t find it, we can&#x27;t fix it.</p>
+                <input id="1188296473" type="text" name="Where is the issue located?" class="form-control" >
+            </div>
+        </div>
+    </div>
+
+    <div id="Pool" class="qblock">
+        <div class="form-group">
+            <label for="1491660764">Pool</label>
+            <div class="form-group">
+                <p class="help-block">Please be as specific as possible. If we can&#x27;t find it, we can&#x27;t fix it.</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="What is the item in need of attention?">What is the item in need of attention?</label>
+            <div class="form-group">
+                <textarea id="1039483670" name="What is the item in need of attention?" class="form-control" ></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="Where is the issue located?">Where is the issue located?</label>
+            <div class="form-group">
+                <p class="help-block">Please be as specific as possible. If we can&#x27;t find it, we can&#x27;t fix it.</p>
+                <input id="1189517112" type="text" name="Where is the issue located?" class="form-control" >
+            </div>
+        </div>
+    </div>
+
+    <div id="Sports" class="qblock">
+        <div class="form-group">
+            <label for="1968993881">Sports Fields and Courts</label>
+            <div class="form-group">
+                <p class="help-block">Please be as specific as possible. If we can&#x27;t find it, we can&#x27;t fix it.</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="What is the item in need of attention?">What is the item in need of attention?</label>
+            <div class="form-group">
+                <textarea id="325153954" name="What is the item in need of attention?" class="form-control" ></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="Where is the issue located?">Where is the issue located?</label>
+            <div class="form-group">
+                <p class="help-block">Please be as specific as possible. If we can&#x27;t find it, we can&#x27;t fix it.</p>
+                <input id="419148903" type="text" name="Where is the issue located?" class="form-control" >
+            </div>
+        </div>
+    </div>
+
+    <div id="StreetLight" class="qblock">
+        <div class="form-group">
+            <label for="505901069">Street Lights</label>
+            <div class="form-group">
+                <p class="help-block">Please be as specific as possible. If we can&#x27;t find it, we can&#x27;t fix it.</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="What is wrong with the light?">What is wrong with the light?</label>
+            <div class="form-group">
+                <input id="860799294" type="text" name="What is wrong with the light?" class="form-control" >
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="What is the pole number on the light?">What is the pole number on the light?</label>
+            <div class="form-group">
+                <input id="143810696" type="text" name="What is the pole number on the light?" class="form-control" >
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="Where is the light located? (Address)">Where is the light located? (Address)</label>
+            <div class="form-group">
+                <input id="1807607362" type="text" name="Where is the light located? (Address)" class="form-control" >
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="tab">
+    <div class="form-group">
+        <label for="308422417">More Information</label>
+        <div class="form-group">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="long-text" for="Please Include as much detail of the issue as possible. The more complete picture we have of the matter you are bringing to our attention, the more effective we will be in addressing and resolving it. Thanks for your time.">Please Include as much detail of the issue as possible. The more complete picture we have of the matter you are bringing to our attention, the more effective we will be in addressing and resolving it. Thanks for your time.</label>
+        <div class="form-group">
+            <textarea id="968425898" name="Please Include as much detail of the issue as possible. The more complete picture we have of the matter you are bringing to our attention, the more effective we will be in addressing and resolving it. Thanks for your time." class="form-control" ></textarea>
+        </div>
+    </div>
+</div>
+
+<div style="overflow:auto;">
+  <div style="float:right;">
+    <button class="btn-info btn" type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+    <button class="btn-info btn" type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:40px;">
+  <span class="step"></span>
+  <span class="step"></span>
+  <span class="step"></span>
+  <span class="step"></span>
+</div>
+
+</form>
+
+
+{% endblock %}

@@ -1,0 +1,248 @@
+<script type='text/javascript'>
+
+    $(document).ready(function () {
+
+        var frm = $('#proposal-form');
+        $(frm).submit(function (event) {
+            $.ajax({
+                type: frm.attr('method'),
+                url: '/api/proposal-form',
+                data: frm.serialize(),
+                success: function (data) {
+                    submitProposalFormSuccess(data);
+                    $('select').chosen();
+                },
+                error: function (data) {
+                    ajaxError()
+                }
+            });
+            event.preventDefault();
+        });
+
+    });
+
+    function submitProposalFormSuccess(data) {
+        var error = data['error_message'];
+        var newFormHTML = data['form_html'];
+
+        if (newFormHTML) {
+            $('#proposal-form-wrapper').html(newFormHTML);
+        }
+
+        if (error) {
+            toggleProposalForm();
+            // DO NOT DISPLAY SUCCESS
+        }
+
+        else {
+            displaySuccess()
+        }
+    }
+
+    var proposal_form = 'closed';
+    function toggleProposalForm() {
+
+        var form_wrapper = $('#proposal-form-wrapper');
+        var form_title_wrapper = $('#proposal-form-wrapper .title-wrapper');
+        var form_title = $('#proposal-form-wrapper .title-wrapper h2');
+        var form_el = $('#proposal-form');
+
+        if (proposal_form == 'closed') {
+            $(form_wrapper).css({paddingBottom: '40px'});
+            $(form_el).css({height: '100%'});
+
+            $(form_title).addClass('open');
+            proposal_form = 'open';
+        }
+
+        else {
+            $(form_wrapper).css({paddingBottom: '0'});
+            $(form_el).animate({height: '0'}, 200);
+
+            $(form_title).removeClass('open');
+            proposal_form = 'closed';
+        }
+
+    }
+
+</script>
+
+<div class='title-wrapper'>
+
+    <h2 onclick='toggleProposalForm();'>Request For Proposal</h2>
+
+</div>
+
+{% if proposal_form.errors %}
+    <div id='form-error'>
+        <h3>Please correct the following errors marked in red.</h3>
+    </div>
+{% endif %}
+
+<form id='proposal-form' method='POST'>
+
+    {% csrf_token %}
+
+    <div class='input-wrapper left {% if proposal_form.first_name.errors %}errors{% endif %}'>
+
+        <label for='id_proposal_form-first_name'>First Name</label>
+        {{ proposal_form.first_name }}
+
+    </div>
+
+    <div class='input-wrapper right {% if proposal_form.last_name.errors %}errors{% endif %}'>
+
+        <label for='id_proposal_form-name'>Last Name</label>
+        {{ proposal_form.last_name }}
+
+    </div>
+
+    <div class='input-wrapper left {% if proposal_form.phone.errors %}errors{% endif %}'>
+
+        <label for='id_proposal_form-phone'>Phone</label>
+        {{ proposal_form.phone }}
+
+    </div>
+
+    <div class='input-wrapper right {% if proposal_form.email.errors %}errors{% endif %}'>
+
+        <label for='id_proposal_form-email'>Email</label>
+        {{ proposal_form.email }}
+
+    </div>
+
+    <div class='input-wrapper {% if proposal_form.preferred_method.errors %}errors{% endif %}'>
+
+        <label for='id_proposal_form-preferred_method'>Preferred Method</label>
+        {{ proposal_form.preferred_method }}
+
+    </div>
+
+    <div class='input-wrapper left {% if proposal_form.subdivision.errors %}errors{% endif %}'>
+
+        <label for='id_proposal_form-subdivision'>Subdivision</label>
+        {{ proposal_form.subdivision }}
+
+    </div>
+
+    <div class='input-wrapper right {% if proposal_form.association_name.errors %}errors{% endif %}'>
+
+        <label for='id_proposal_form-associationa_name'>Association Name</label>
+        {{ proposal_form.association_name }}
+
+    </div>
+
+    <div class='input-wrapper city {% if proposal_form.city.errors %}errors{% endif %}'>
+
+        <label for='id_proposal_form-city'>City</label>
+        {{ proposal_form.city }}
+
+    </div>
+
+    <div class='input-wrapper state {% if proposal_form.state.errors %}errors{% endif %}'>
+
+        <label for='id_proposal_form-state'>State</label>
+        {{ proposal_form.state }}
+
+    </div>
+
+    <div class='input-wrapper zip {% if proposal_form.zip.errors %}errors{% endif %}'>
+
+        <label for='id_proposal_form-zip'>Zip</label>
+        {{ proposal_form.zip }}
+
+    </div>
+
+    <div class='input-wrapper third one {% if proposal_form.number_of_homes.errors %}errors{% endif %}'>
+
+        <label for='id_proposal_form-number_of_homes'>Number of<br>Homes</label>
+        {{ proposal_form.number_of_homes }}
+
+    </div>
+
+    <div class='input-wrapper third two {% if proposal_form.meeting_frequency.errors %}errors{% endif %}'>
+
+        <label for='id_proposal_form-meeting_frequency'>Frequency of<br>Board Meetings</label>
+        {{ proposal_form.meeting_frequency }}
+
+    </div>
+
+    <div class='input-wrapper third three {% if proposal_form.fee_collection.errors %}errors{% endif %}'>
+
+        <label for='id_proposal_form-fee_collection'>How are Dues/<br>Fees Collected</label>
+        {{ proposal_form.fee_collection }}
+
+    </div>
+
+    <div class='input-wrapper {% if proposal_form.same_assessment.errors %}errors{% endif %}'>
+
+        <label for='id_proposal_form-same_assessment'>Are All Properties Assessed the Same Amount?</label>
+        {{ proposal_form.same_assessment }}
+
+    </div>
+
+    <div class='input-wrapper checkboxes {% if proposal_form.association_types.errors %}errors{% endif %}'>
+
+        <label for='id_proposal_form-type_of_association'>Type of Association</label>
+        {{ proposal_form.association_types }}
+        {#        <ul id='id_proposal_form-type_of_association'>#}
+        {#            {% for item in association_types %}#}
+        {#                <li>#}
+        {#                    <input id='id_proposal_form-type_of_association_{{ item.id }}' type='checkbox' name='proposal_form-association_types' value='{{ forloop.counter }}'>#}
+        {#                    <label for='id_proposal_form-type_of_association_{{ item.id }}'>#}
+        {#                        {{ item.label }}#}
+        {#                        {% if item.asterisk %}<span>({{ item.asterisk }})</span>{% endif %}#}
+        {#                    </label>#}
+        {#                </li>#}
+        {#            {% endfor %}#}
+        {#        </ul>#}
+
+    </div>
+
+    <div class='input-wrapper checkboxes {% if proposal_form.common_properties.errors %}errors{% endif %}'>
+
+        <label for='id_proposal_form-common_properties'>Common Property</label>
+        {{ proposal_form.common_properties }}
+
+    </div>
+
+    <div class='input-wrapper {% if proposal_form.board_member.errors %}errors{% endif %}'>
+
+        <label for='id_proposal_form-board_member'>Are You Currently Serving on the Board of the Association?</label>
+        {{ proposal_form.board_member }}
+
+    </div>
+
+    <div class='input-wrapper {% if proposal_form.board_requested.errors %}errors{% endif %}'>
+
+        <label for='id_proposal_form-board_requested'>Has the Board Requested the Proposal?</label>
+        {{ proposal_form.board_requested }}
+
+    </div>
+
+    <div class='input-wrapper {% if proposal_form.reserve_study.errors %}errors{% endif %}'>
+
+        <label for='id_proposal_form-reserve_stuyd'>Has Your Association had a Reserve Study Prepared?</label>
+        {{ proposal_form.reserve_study }}
+
+    </div>
+
+    <div class='input-wrapper left {% if proposal_form.transition_date.errors %}errors{% endif %}'>
+
+        <label for='id_proposal_form-transition_date'>Anticipated Transition Date</label>
+        {{ proposal_form.transition_date }}
+
+    </div>
+
+    <div class='input-wrapper right {% if proposal_form.proposal_due_date.errors %}errors{% endif %}'>
+
+        <label for='id_proposal_form-proposal_due_date'>Proposal Due Date <span>(If Applicable)</span></label>
+        {{ proposal_form.proposal_due_date }}
+
+    </div>
+
+    <div class='clear-both'></div>
+
+    <input class='btn info' type='submit' value='Submit'>
+
+</form>

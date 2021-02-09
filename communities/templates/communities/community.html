@@ -1,0 +1,494 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+
+{% block extra-head %}
+    <link type='text/css' rel='stylesheet' href='/static/css/flexslider.css'>
+    <link type='text/css' rel='stylesheet' href='/static/css/home.css'>
+    <style media="screen">
+      .com-doc .text a {
+      font-weight: normal;
+      font-size: 22px;
+      color: #7E9DBD;
+      background: none;
+      padding: 3px 0;
+      display: block;
+      font-size: 14px !important;
+      font-weight: 700 !important;
+  }
+
+  .faq.alf li.active .answer {
+    max-height:20000px !important
+  }
+
+  .com-doc {
+    white-space: nowrap;
+    position: relative;
+    padding-right: 60px;
+    height: 100px;
+}
+
+.com-doc p {
+    color: #8B8F96;
+    font-size: 16px;
+    display: inline-block;
+    word-break: normal;
+    white-space: normal;
+}
+    </style>
+    <script type="text/javascript" src="{% static "questions/js/main.js" %}"></script>
+    <script type='text/javascript' src='/static/js/jquery.flexslider-min.js'></script>
+     <script type="text/javascript" src="{% static "questions/js/success.js" %}"></script>
+
+
+
+    <script type='text/javascript'>
+        $(document).ready(function () {
+            $('.billboards').flexslider({
+                animation: 'fade',
+                prevText: '',
+                nextText: '',
+                touch: false,
+                pauseOnHover: false
+            });
+
+            $('.slide-show').flexslider({
+                slideshow: false,
+                animation: 'fade',
+                prevText: '',
+                nextText: '',
+                touch: false,
+                pauseOnHover: false
+            });
+        });
+    </script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.js"> </script>
+
+<script>
+        $(document).ready(function() {
+
+            $('#myForm').ajaxForm({
+            complete: function(xhr) {
+            displaySuccess();
+           $('#myForm')[0].reset();
+    }
+});
+
+
+
+        });
+
+
+
+
+
+    </script>
+
+<script>
+    function displaySuccess() {
+
+    var mask = $('#dialogbox1 .dialog-mask');
+    var dialog = $('#dialogbox1 .dialog-wrapper');
+
+    $(mask).fadeIn(600);
+
+    setTimeout(
+        function () {
+            $(dialog).show();
+            $(dialog).animate({top: '0'}, 800)
+        }, 300
+    );
+}
+
+function hideSuccess() {
+    var mask = $('#dialogbox1 .dialog-mask');
+    var dialog = $('#dialogbox1 .dialog-wrapper');
+
+    $(dialog).animate({top: '-9999px'}, 500);
+
+    setTimeout(
+        function () {
+            $(dialog).hide();
+            $(mask).fadeOut(400);
+        }, 300
+    );
+}
+</script>
+
+
+
+{% endblock %}
+
+
+{% block content %}
+
+
+<div id='dialogbox1'>
+<div class='dialog-mask'></div>
+<div class='dialog-wrapper border-box'>
+  <div class='title-wrapper'>
+      <h1>Success!</h1>
+  </div>
+  <div class='copy-wrapper'>
+<p>Your request has been received. Thank you for submitting!</p>
+
+      <p><a class="btn info" onclick="window.location.reload()">Continue</a></p>
+
+  </div>
+
+</div>
+</div>
+
+
+
+
+
+
+
+    <div id='sections' class='content-gutter wrapper'>
+        <div id="billboard" class="flexslider billboards">
+
+            <ul class="slides">
+              {% if comsliders %}
+
+              {% for slide in comsliders %}
+
+              <li style="background-image: url('{{MEDIA_URL}}{{slide.file}}'); width: 100%; float: left; margin-right: -100%; position: relative; opacity: 0; display: block; z-index: 1;"
+                  class="">
+                  <div class="transparent-overlay"></div>
+                  <div class="container">
+                      <div class="slide-content">
+                          <h1>{{ community.title }}</h1>
+                      </div>
+                  </div>
+              </li>
+
+              {% endfor %}
+              {% else %}
+                <li style="background-image: url('/media/uploads/home-banner-3.jpg'); width: 100%; float: left; margin-right: -100%; position: relative; opacity: 0; display: block; z-index: 1;"
+                    class="">
+                    <div class="transparent-overlay"></div>
+                    <div class="container">
+                        <div class="slide-content">
+                            <h1>{{ community.title }}</h1>
+                        </div>
+                    </div>
+                </li>
+                <li style="background-image: url('/media/uploads/home-banner-2.jpg'); width: 100%; float: left; margin-right: -100%; position: relative; opacity: 1; display: block; z-index: 2;"
+                    class="flex-active-slide">
+                    <div class="transparent-overlay"></div>
+                    <div class="container">
+                        <div class="slide-content">
+                            <h1>{{ community.title }}</h1>
+                        </div>
+                    </div>
+                </li>
+                <li style="background-image: url('/media/uploads/home-banner.jpg'); width: 100%; float: left; margin-right: -100%; position: relative; opacity: 0; display: block; z-index: 1;"
+                    class="">
+                    <div class="transparent-overlay"></div>
+                    <div class="container">
+                        <div class="slide-content">
+                            <h1>{{ community.title }}</h1>
+                        </div>
+                    </div>
+                </li>
+                {% endif %}
+            </ul>
+
+        </div>
+        {% if community.banner %}
+        {% if community.banner.is_active %}
+            <div class="message-banner">
+                {{ community.banner.message }}: {{ community.banner.description }}
+            </div>
+        {% endif %}
+        {% endif %}
+
+        <div class="container-fluid no-p">
+            <div id="mini-billboards" class="home-section col-xs-12 cover-background" style="background-image: url(&quot;&quot;);">
+                <div class="container">
+                    <div class="row">
+                        <div class="mini-billboard col-xs-4">
+                            <a href="/homeowners-report-violation/?community={{ community.slug }}">
+                                <img src="/media/uploads/mini_billboards/mini-billboards-violations.png">
+                                <div class="copy">
+                                    <h3>Report Violations</h3>
+                                </div>
+                            </a>
+                            <div class="clear-both"></div>
+                        </div>
+                        <div class="mini-billboard col-xs-4">
+                            <a href="/homeowners-maintenance-request/?community={{ community.slug }}">
+                                <img src="/media/uploads/mini_billboards/mini-billboards-maintenance.png">
+                                <div class="copy">
+                                    <h3>Maintenance Request</h3>
+                                </div>
+                            </a>
+                            <div class="clear-both"></div>
+                        </div>
+                        <div class="mini-billboard col-xs-4">
+                            <a href="/homeowners-architectural-review/?community={{ community.slug }}">
+                                <img src="/media/uploads/arc-review-icon_JwmQ9uE.png">
+                                <div class="copy">
+                                    <h3>Architectural Review</h3>
+                                </div>
+                            </a>
+                            <div class="clear-both"></div>
+                        </div>
+                        <div class="clear-both"></div>
+                    </div>
+                    <div class="clear-both"></div>
+                </div>
+            </div>
+        </div>
+
+        {% if documents %}
+            <div class="com-documents container-fluid">
+
+                <div class="row">
+                    <div class="container">
+                             <h2>Documents</h2>
+                      <ul class="faq alf">
+                          {% for cat in doccat %}
+                            {% if cat > 0 %}
+                              <li>
+                                  <h3 class="question" style="color: #7E9DBD;font-size: 14px !important;
+    font-weight: 700 !important"><img src="/static/images/folder.svg" alt="FOLDER" width="75"> {{ cat.title }}
+                                     <p style="    color: #8B8F96;
+    font-size: 16px;
+    font-weight: normal; margin-left: 80px;
+    margin-top: -25px;">{{ cat.description}} </p></h3>
+                                  <div class="answer">
+                                    {% for document in documents %}
+                                     {% ifequal document.category.pk cat.pk%}
+                                        <div class="col-xs-6">
+                                            <div class="com-doc">
+                                                <img src="/media/uploads/rcn_doc.svg" alt="">
+                                                <div class="text">
+                                                    {% if document.file %}
+                                                        <a  target="_blank" href="{{MEDIA_URL}}{{ document.file }}">
+                                                          {{ document.title }}
+                                                        </a>
+                                                    {% else %}
+                                                        <button type="button" class="btn btn-sm action-button">
+                                                            {{ document.title }}
+                                                        </button>
+                                                    {% endif %}
+                                                    <p>{{ document.description }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                      {% endifequal %}
+                                    {% endfor %}
+                                  </div>
+                              </li>
+                              {% else %}
+                              <li>
+                                  <h3 class="question" style="color: #7E9DBD;font-size: 14px !important;
+    font-weight: 700 !important"> <img src="/static/images/folder.svg" alt="FOLDER" width="75"> Others </h3>
+                                  <div class="answer" style="height: auto !important;">
+                                    {% for document in documents %}
+                                     {% if not document.category  %}
+                                        <div class="col-xs-6">
+                                            <div class="com-doc">
+                                                <img src="/media/uploads/rcn_doc.svg" alt="">
+                                                <div class="text">
+                                                    {% if document.file %}
+                                                        <a  target="_blank" href="{{MEDIA_URL}}{{ document.file }}">
+                                                          {{ document.title }}
+                                                        </a>
+                                                    {% else %}
+                                                        <button type="button" class="btn btn-sm action-button">
+                                                            {{ document.title }}
+                                                        </button>
+                                                    {% endif %}
+                                                    <p>{{ document.description }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                      {% endif %}
+                                    {% endfor %}
+                                  </div>
+                              </li>
+                              {% endif %}
+                          {% endfor %}
+                      </ul>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+
+        <div class="container">
+            <div style="margin: 30px 0px;">
+            <div class="row">
+                <div class="col-md-12">
+                    <h2 style="color: #7E9DBD; float: right; margin: 15px; text-transform: uppercase;">Owner registration form</h2>
+                </div>
+            </div>
+            <form  id="myForm" action="{% url 'new_owner_view' %}" method="POST">{% csrf_token %}
+            <div class="form-group">
+                <input type="hidden" name="neighborhood" value="{{ community.pk }}">
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="1531567771">First Name</label>
+                    <div class="form-group">
+                        <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+                        <input id="1987879139" onblur="validField(this)" type="text" name="first_name" class="form-control need_valid" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="1285461915">Last Name</label>
+                    <div class="form-group">
+                        <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+                        <input id="246239244" onblur="validField(this)" type="text" name="last_name" class="form-control need_valid" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="1833231179">Address</label>
+                    <div class="form-group">
+                        <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+                        <input id="825879076" onblur="validField(this)" type="text" name="address" class="form-control need_valid" required></input>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="23862975">City </label>
+                    <div class="form-group">
+                        <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+                        <input id="1773479104" onblur="validField(this)" type="text" name="city" class="form-control need_valid" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="260417516">State</label>
+                    <div class="form-group">
+                        <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+                        <input id="2091818658" onblur="validField(this)" type="text" name="state" class="form-control need_valid" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="1004437863">Zip</label>
+                    <div class="form-group">
+                        <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+                        <input id="525863091" onblur="validField(this)" type="text" name="zip" class="form-control need_valid" required>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="2134194570">Email Address</label>
+                    <div class="form-group">
+                        <p id="err_email" style="display:none; color: red;">Invalid email</p>
+                        <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+                        <input id="id_email" onblur="validEmail(this)" type="text" name="email" class="form-control need_valid" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="1979251139">Phone</label>
+                    <div class="form-group">
+                        <p id="err_phone" style="display:none; color: red;">Invalid phone. Valid formats: (123) 456-7890, 1234567890</p>
+                        <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+                        <input id="id_phone" onblur="validPhone(this)" type="text" name="phone" class="form-control need_valid" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button class="btn-info btn" style="margin: 30px 80px" type="sumbit">Submit</button>
+                </div>
+            </div>
+            <input name="type" type="hidden" value="new_owner">
+            </form>
+            <br>
+            <br>
+            <br>
+
+            </div>
+            <div class="clearfix"> </div>
+        </div>
+        <div class="clearfix"> </div>
+            <div class="com-documents container-fluid">
+                <div class="row">
+                    <div class="container">
+                        <h2>Faq's</h2>
+                        <ul class="faq">
+                            {% for faq in faqs %}
+                                <li>
+                                    <h3 class="question">{{ faq.question }}</h3>
+                                    <div class="answer">{{ faq.answer }}</div>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <script>
+                // Toggle Collapse
+                $('.faq li .question').click(function () {
+                    $(this).find('.plus-minus-toggle').toggleClass('collapsed');
+                    $(this).parent().toggleClass('active');
+                });
+            </script>
+        {% if community.variable_section %}
+            <div class="container-fluid">
+                {% if community.variable_title %}<div class="container">
+                    <div class="row">
+                        <h2 style="margin: 25px 13px; color:#7E9DBD;">{{ community.variable_title }}</h2></div>
+                        {{ community.variable_section|safe }}
+                    </div>{% endif %}
+
+            </div>
+        {% endif %}
+
+        {% ifequal template_add_on 'staff' %}
+            <div id='template-add-on'>
+
+                {% include 'snippets/staff_addon.html' %}
+
+            </div>
+        {% endifequal %}
+    </div>
+{% endblock %}
+
+
+{% block extra-content %}
+    <div id='dialog-placeholder'>
+        {% include 'snippets/success_dialog.html' %}
+    </div>
+{% endblock %}
+
+
+{% if active_user %}
+    {% block user-actions %}
+        <span class='left'>
+            <a onclick='displayManageWindow("/admin/page_content/webpage/{{ page.id }}/")'>edit page</a>
+        </span>
+        {% ifequal template_add_on 'staff' %}
+            <span class='left'>
+                <a onclick='displayManageWindow("/admin/staff/member/")'>staff members</a>
+            </span>
+        {% endifequal %}
+        {% ifequal template_add_on 'faq' %}
+            <span class='left'>
+                <a onclick='displayManageWindow("/admin/page_content/faq/")'>faqs</a>
+            </span>
+        {% endifequal %}
+        {% ifequal page.template_choice 'news' %}
+            <span class='left'>
+                <a onclick='displayManageWindow("/admin/news/article/")'>articles</a>
+            </span>
+        {% endifequal %}
+        {% ifequal page.template_choice 'news' %}
+            <span class='left'>
+                <a onclick='displayManageWindow("/admin/news/tag/")'>article tags</a>
+            </span>
+        {% endifequal %}
+        {% ifequal template_add_on 'proposal' %}
+            <span class='left'>
+                <a onclick='displayManageWindow("/admin/forms/")'>form attributes</a>
+            </span>
+        {% endifequal %}
+    {% endblock %}
+{% endif %}

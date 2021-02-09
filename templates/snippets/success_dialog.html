@@ -1,0 +1,32 @@
+{% load front_tags %}
+
+<div class='dialog-mask'></div>
+
+<div class='dialog-wrapper border-box'>
+
+    <div class='title-wrapper'>
+
+        {% front_edit 'small-contact-form-success-title' %}
+            <h1>Success</h1>
+        {% end_front_edit %}
+
+    </div>
+
+    <div class='copy-wrapper'>
+
+        {% front_edit 'small-contact-form-success-copy' %}
+
+            <h2>Your Question Has Been Sent</h2>
+
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                quis nostrud exercitation ullamco laboris nisi ut aliquip ex commodo emin ad ut tempor.
+            </p>
+
+            <a class='btn info' onclick='hideSuccess()'>Continue</a>
+
+        {% end_front_edit %}
+
+    </div>
+
+</div>

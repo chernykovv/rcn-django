@@ -1,0 +1,324 @@
+{% extends 'detail_pages/col_free.html' %}
+{% load front_tags %}
+{% load staticfiles %}
+
+{% block extra-head %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static "questions/css/questions.css" %}">
+{% endblock %}
+
+
+{% block detail-content-left %}
+<style>
+    textarea {
+        height: 130px;
+    }
+</style>
+
+    <div id="in-page-nav" class="col-md-10">
+        <ul class="no-list">
+            <li class="top-level list-header">Homeowners</li>
+            <li class="">
+                <a class="first" href="/homeowners-neighborhoods">
+                    Neighborhoods
+                </a>
+            </li>
+            <li class="active">
+                <a class="first" href="{% url 'violation_view' %}">
+                    Report a Violation
+                </a>
+            </li>
+            <li class="">
+                <a class="" href="{% url 'maintenance_view' %}">
+                    Maintenance Request
+                </a>
+            </li>
+            <li class="">
+                <a class="last" href="{% url 'review_view' %}">
+                    Arc Review Request
+                </a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block detail-content-right %}
+
+<form id="regForm" action="" method="POST">{% csrf_token %}
+
+    <div class="tab">
+        <div class="form-group">
+            <label>{{ form.neighborhood.label }}</label>
+            <p id="sel_val" style="display:none; color: red;">Select value</p>
+            {{ form.neighborhood }}
+        </div>
+        <!-- <div class="form-group">
+            <label>{{ form.info.label }}</label>
+            <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+            {{ form.info }}
+        </div> -->
+        <div class="form-group">
+            <label>{{ form.name.label }}</label>
+            <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+            {{ form.name }}
+        </div>
+        <div class="form-group">
+            <label>{{ form.address.label }}</label>
+            <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+            {{ form.address }}
+        </div>
+        <div class="form-group">
+            <label>{{ form.phone.label }}</label>
+            <p id="err_phone" style="display:none; color: red;">Invalid phone. Valid formats: (123) 456-7890, 1234567890</p>
+            <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+            {{ form.phone }}
+        </div>
+        <div class="form-group">
+            <label>{{ form.email.label }}</label>
+            <p id="err_email" style="display:none; color: red;">Invalid email</p>
+            <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+            {{ form.email }}
+        </div>
+        <input name="type" type="hidden" value="violation">
+    </div>
+    
+    <div class="tab">
+        <div class="form-group">
+            <label for="What type of violation would you like to report in your neighborhood?">What type of violation would you like to report in your neighborhood?</label>
+            <div class="form-group cho-margin">
+                <div class="radio">
+                    <label>
+                        <input type="radio" class="ch need_valid" name="What type of violation would you like to report in your neighborhood?" value="Parking" required>
+                        Parking (on street)
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" class="ch" name="What type of violation would you like to report in your neighborhood?" value="Abandoned" required>
+                        Abandoned Vehicle
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" class="ch" name="What type of violation would you like to report in your neighborhood?" value="Lawn" required>
+                        Lawn Appearance
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" class="ch" name="What type of violation would you like to report in your neighborhood?" value="House" required>
+                        House Decorations
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" class="ch" name="What type of violation would you like to report in your neighborhood?" value="Garbage" required>
+                        Garbage &amp; Recycling Bin location
+                    </label>
+                </div>
+                <div class="radio">
+                    <label>
+                        <input type="radio" id="custom_input" data-hx="true" class="ch" name="What type of violation would you like to report in your neighborhood?" value="other" required>
+                    </label>
+                    <input type="text" onfocus="this.placeholder = ''" class="custom-input" name="What type of violation would you like to report in your neighborhood?" placeholder="custom value">
+                </div>
+                <p id="che_val" style="display:none; color: red;">Select value</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="tab" id="third">
+        <div id="Parking" class="qblock">
+            <div class="form-group">
+                <label for="2020334259">Parking on the Street</label>
+                <div class="form-group">
+                </div>
+            </div>
+    
+            <div class="form-group">
+                <label for="What is the address of the home where the parking violation is being committed?">What is the address of the home where the parking violation is being committed?</label>
+                <div class="form-group">
+                    <textarea id="395004226" name="What is the address of the home where the parking violation is being committed?" class="form-control" required></textarea>
+                </div>
+            </div>
+        </div>
+    
+        <div id="Abandoned" class="qblock">
+            <div class="form-group">
+                <label for="1678180405">Abandoned Vehicle</label>
+                <div class="form-group">
+                    <p class="help-block">Please be as specific as possible. If we can&#x27;t find it, we can&#x27;t fix it.</p>
+                </div>
+            </div>
+    
+            <div class="form-group">
+                <label for="How long has the car been in it&#x27;s current location?">How long has the car been in it&#x27;s current location?</label>
+                <div class="form-group">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="How long has the car been in it&#x27;s current location?" value="couple of days" required>
+                            couple of days
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="How long has the car been in it&#x27;s current location?" value="about a week" required>
+                            about a week
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="How long has the car been in it&#x27;s current location?" value="more than a week" required>
+                            more than a week
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="How long has the car been in it&#x27;s current location?" value="more than a month" required>
+                            more than a month
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="How long has the car been in it&#x27;s current location?" value="as long as I can remember" required>
+                            as long as I can remember
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="How long has the car been in it&#x27;s current location?" value="__other_option__" required>
+                        </label>
+                        <input type="text" onfocus="this.placeholder = ''" class="custom-input" name="How long has the car been in it&#x27;s current location?" placeholder="custom value">
+                    </div>
+                </div>
+            </div>
+    
+            <div class="form-group">
+                <label for="What is the address of the house where the vehicle has been abandoned?">What is the address of the house where the vehicle has been abandoned?</label>
+                <div class="form-group">
+                    <p class="help-block">Please be as specific as possible. If we can&#x27;t find it, we can&#x27;t fix it.</p>
+                    <input id="611879842" type="text" name="What is the address of the house where the vehicle has been abandoned?" class="form-control" required>
+                </div>
+            </div>
+        </div>
+    
+        <div id="Lawn" class="qblock">
+            <div class="form-group">
+                <label for="614585921">Lawn &amp; Landscaping</label>
+                <div class="form-group">
+                    <p class="help-block">Please be as specific as possible. If we can&#x27;t find it, we can&#x27;t fix it.</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="What is the problem with the landscaping or lawn of the neighbors house you would like to report?">What is the problem with the landscaping or lawn of the neighbors house you would like to report?</label>
+                <div class="form-group">
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="What is the problem with the landscaping or lawn of the neighbors house you would like to report?" value="overgrown" required>
+                            overgrown
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="What is the problem with the landscaping or lawn of the neighbors house you would like to report?" value="doesn&#x27;t meet minimum requirements as stated in the covenants" required>
+                            doesn&#x27;t meet minimum requirements as stated in the covenants
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="What is the problem with the landscaping or lawn of the neighbors house you would like to report?" value="dead plants, trees, or lawn" required>
+                            dead plants, trees, or lawn
+                        </label>
+                    </div>
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="What is the problem with the landscaping or lawn of the neighbors house you would like to report?" value="__other_option__" required>
+                        </label>
+                        <input type="text" onfocus="this.placeholder = ''" class="custom-input" name="What is the problem with the landscaping or lawn of the neighbors house you would like to report?" placeholder="custom value">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="836680981">What is the address of the house committing the landscaping violation?</label>
+                 <div class="form-group">
+                    <textarea id="1768384388" name="What is the address of the house committing the landscaping violation?" class="form-control" required></textarea>
+                </div>
+            </div>
+        </div>
+    
+        <div id="House" class="qblock">
+            <div class="form-group">
+                <label for="1733750438">House Decorations</label>
+                <div class="form-group">
+                    <p class="help-block">Please be as specific as possible. If we can&#x27;t find it, we can&#x27;t fix it.</p>
+                </div>
+            </div>      
+            <div class="form-group">
+                <label for="Where is the violation to the covenants you would like to report concerning your neighbors decorations on or around their home?">Where is the violation to the covenants you would like to report concerning your neighbors decorations on or around their home?</label>
+                <div class="form-group">
+                    <input id="1706856790" type="text" name="Where is the violation to the covenants you would like to report concerning your neighbors decorations on or around their home?" class="form-control" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="What is the address of the house committing the violation to the neighborhood covenants?">What is the address of the house committing the violation to the neighborhood covenants?</label>
+                <div class="form-group">
+                    <input id="110541948" type="text" name="What is the address of the house committing the violation to the neighborhood covenants?" class="form-control" required>
+                </div>
+            </div>
+        </div>
+    
+        <div id="Garbage" class="qblock">
+            <div class="form-group">
+                <label for="789668349">Garbage &amp; Recycling Bin location</label>
+                <div class="form-group">
+                    <p class="help-block">Please be as specific as possible. If we can&#x27;t find it, we can&#x27;t fix it.</p>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="908138890">What is the issue in need of attention?</label>
+                <div class="form-group">
+                    <textarea id="530478891" name="What is the issue in need of attention?" class="form-control" required></textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="What is the address of the house committing the violation to the neighborhood covenants?">What is the address of the house committing the violation to the neighborhood covenants?</label>
+                <div class="form-group">
+                    <p class="help-block">Please be as specific as possible. If we can&#x27;t find it, we can&#x27;t fix it.</p>
+                    <input id="162845733" type="text" name="What is the address of the house committing the violation to the neighborhood covenants?" class="form-control" required>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="tab">
+        <div class="form-group">
+            <label for="308422417">More Information</label>
+            <div class="form-group">
+                <p class="help-block">Please include all information possible to help us find, access, and address the issue you have brought to our attention.</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="long-text" for="Please Include as much detail of the issue as possible. The more complete picture we have of the matter you are bringing to our attention, the more effective we will be in addressing and resolving it. Thanks for your time.">Please Include as much detail of the issue as possible. The more complete picture we have of the matter you are bringing to our attention, the more effective we will be in addressing and resolving it. Thanks for your time.</label>
+            <div class="form-group">
+                <textarea id="968425898" name="Please Include as much detail of the issue as possible. The more complete picture we have of the matter you are bringing to our attention, the more effective we will be in addressing and resolving it. Thanks for your time." class="form-control" ></textarea>
+            </div>
+        </div>
+    </div>
+    
+    <div style="overflow:auto;">
+        <div style="float:right;">
+            <button class="btn-info btn" type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+            <button class="btn-info btn" type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+        </div>
+    </div>
+    
+    <div style="text-align:center;margin-top:40px;">
+      <span class="step"></span>
+      <span class="step"></span>
+      <span class="step"></span>
+      <span class="step"></span>
+    </div>
+    
+</form>
+
+{% endblock %}

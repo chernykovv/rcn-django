@@ -1,0 +1,66 @@
+{% extends 'detail_pages/detail_base.html' %}
+{% load front_tags %}
+
+
+{% block detail-content %}
+
+    <div class='container'>
+
+        <div class='row'>
+
+            <div id='left-section-copy' class='col-xs-6'>
+
+                    {% block detail-content-left %}
+
+                    {% endblock %}
+
+                    <div class='clearfix'></div>
+
+            </div>
+
+
+            <div id='right-section-copy' class='col-xs-5'>
+
+                <div class='row'>
+
+                    <div class='section-copy col-xs-12'>
+
+                        {% block detail-content-right %}
+
+                        {% endblock %}
+
+                        <div class='clearfix'></div>
+
+                        {% ifequal template_add_on 'proposal' %}
+                            <div id='template-add-on'>
+
+                                <div id='proposal-form-wrapper' class='large-form'>
+                                    {% include 'snippets/proposal_form.html' %}
+                                </div>
+
+                            </div>
+                        {% endifequal %}
+
+                        <div class='clearfix'></div>
+
+                        {% ifequal template_add_on 'faq' %}
+                            <div id='template-add-on'>
+
+                                {% include 'snippets/faq_addon.html' %}
+
+                            </div>
+                        {% endifequal %}
+
+                        <div class='clearfix'></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends 'detail_pages/detail_base.html' %}
+{% load front_tags %}
+
+
+{% block page-title %}
+
+    {% if article.meta_title %}
+        {{ article.meta_title }}
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+
+{% endblock %}
+
+
+{% block meta_description %}
+
+    {% if article.meta_description %}
+        <meta name='description' content='{{ article.meta_description }}'>
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+
+{% endblock %}
+
+
+{% block detail-content %}
+
+    <div class='container'>
+
+        <div class='row'>
+
+            <div class='col-xs-4'>
+
+                <ul id='breadcrumbs' class='no-list'>
+
+                    <li>
+                        <a href='/news/{{ page.get_news_page.slug }}'>All Articles</a>
+                    </li>
+
+                    {% if current_tag %}
+                        <li class='divider'>
+                            >
+                        </li>
+
+                        <li>
+                            <a class='last' href='/news/{{ page.slug }}/tag={{ current_tag.slug }}'>
+                                {{ current_tag.label }}
+                            </a>
+                        </li>
+                    {% endif %}
+
+                </ul>
+
+                <img class='member-image' src='{{ article.image }}'>
+
+            </div>
+
+            <div class='col-xs-1'></div>
+
+            <div id='section-copy-wrapper' class='col-xs-7'>
+
+                <div class='row'>
+
+                    <div class='section-copy col-xs-12'>
+
+                        <h2 class='member-name'>{{ article.label }}</h2>
+                        <p class='position'>Author: {{ article.author }}</p>
+
+                        {% autoescape off %}
+                        {{ article.content }}
+                        {% endautoescape %}
+
+                        <div class='clearfix'></div>
+
+                    </div>
+
+                    <div class='col-xs-12'>
+
+                        {% if prev_url %}
+                            {% if current_tag.slug %}
+                                <a class='btn info left' href='/news/{{ page.slug }}/tag={{ current_tag.slug }}/article={{ prev_url }}'>Prev</a>
+                            {% else %}
+                                <a class='btn info left' href='/news/{{ page.slug }}/article={{ prev_url }}'>Prev</a>
+                            {% endif %}
+                        {% endif %}
+
+                        {% if next_url %}
+                            {% if current_tag.slug %}
+                                <a class='btn info right' href='/news/{{ page.slug }}/tag={{ current_tag.slug }}/article={{ next_url }}'>Next</a>
+                            {% else %}
+                                <a class='btn info right' href='/news/{{ page.slug }}/article={{ next_url }}'>Next</a>
+                            {% endif %}
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+
+{% block user-actions %}
+
+    {{ block.super }}
+
+    <span class='left'>
+        <a onclick='displayManageWindow("/admin/news/article/{{ article.id }}/")'>edit article</a>
+    </span>
+
+{% endblock %}

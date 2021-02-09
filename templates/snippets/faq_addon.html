@@ -1,0 +1,18 @@
+<div id='faq-wrapper'>
+
+    <h1>FAQs</h1>
+
+    <div class='row'>
+
+        {% for faq in page.faq_add_on %}
+            <div class='col-xs-12'>
+
+                <h2>Q: {{ faq.question }}</h2>
+                <p><span>A:</span> {{ faq.answer }}</p>
+
+            </div>
+        {% endfor %}
+
+    </div>
+
+</div>

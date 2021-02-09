@@ -1,0 +1,136 @@
+{% extends 'detail_pages/col_free.html' %}
+{% load front_tags %}
+
+{% block extra-head %}
+
+    <link type='text/css' rel='stylesheet' href='/static/css/flexslider.css'>
+    <link type='text/css' rel='stylesheet' href='/static/css/home.css'>
+
+    <script type='text/javascript' src='/static/js/jquery.flexslider-min.js'></script>
+    <script type='text/javascript'>
+
+        $(document).ready(function () {
+
+            $('.billboards').flexslider({
+                animation: 'fade',
+                prevText: '',
+                nextText: '',
+                touch: false,
+                pauseOnHover: false
+            });
+
+            $('.slide-show').flexslider({
+                slideshow: false,
+                animation: 'fade',
+                prevText: '',
+                nextText: '',
+                touch: false,
+                pauseOnHover: false
+            });
+
+        });
+
+    </script>
+
+    
+
+    {% front_edit_scripts editor='ckeditor' %}
+
+{% endblock %}
+
+{% block content %}
+<div id="billboard" class="flexslider billboards">
+
+        <ul class="slides">
+
+            
+                <li style="background-image: url('/media/uploads/home-banner-3.jpg'); width: 100%; float: left; margin-right: -100%; position: relative; opacity: 0; display: block; z-index: 1;" class="">
+
+                    <div class="transparent-overlay"></div>
+
+                    <div class="container">
+
+                        <div class="slide-content">
+
+                            <h1>Process Your Dues</h1>
+
+                            <h2></h2>
+
+                        </div>
+
+                    </div>
+
+                </li>
+            
+                <li style="background-image: url('/media/uploads/home-banner-2.jpg'); width: 100%; float: left; margin-right: -100%; position: relative; opacity: 1; display: block; z-index: 2;" class="flex-active-slide">
+
+                    <div class="transparent-overlay"></div>
+
+                    <div class="container">
+
+                        <div class="slide-content">
+
+                            <h1>Process Your Dues</h1>
+
+                            <h2></h2>
+
+                        </div>
+
+                    </div>
+
+                </li>
+            
+                <li style="background-image: url('/media/uploads/home-banner.jpg'); width: 100%; float: left; margin-right: -100%; position: relative; opacity: 0; display: block; z-index: 1;" class="">
+
+                    <div class="transparent-overlay"></div>
+
+                    <div class="container">
+
+                        <div class="slide-content">
+
+                            <h1>Process Your Dues</h1>
+
+                            <h2></h2>
+
+                        </div>
+
+                    </div>
+
+                </li>
+
+        </ul>
+
+    </div>
+
+   
+<div id="pl_iframe" name="pl_iframe" class="pl_iframe">
+
+
+    
+</div>
+<script src="https://www.paylease.com/iframe_embed.js"></script>
+
+    
+    <script>
+        /* please set the my_link value below to the URL
+        provided to you by your PayLease rep */
+
+        var my_link = "https://www.paylease.com/index_out.php?pm_id=59145641";
+        my_link = encodeURIComponent(my_link);
+        /*
+        * two possible things to set in the function below
+        1. use the first number (700) to set the iframe width
+        2. use the second number (650) to set the iframe height
+        */
+        doIframe(my_link, '100%', 650);
+    </script>
+    <style>
+        iframe{
+            margin: 30px 0;
+            border: none;
+        }
+        #content-wrapper ul{
+            margin: 0;
+        }
+    </style>
+{% endblock %}

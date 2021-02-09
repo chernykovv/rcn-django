@@ -1,0 +1,41 @@
+{% load fb_versions %}
+
+<div id='article-list-wrapper' class='row'>
+
+    <div class='col-xs-12'>
+        <h1>Articles{% if current_tag.label %}: {{ current_tag.label }}{% endif %}</h1>
+    </div>
+
+    {% for item in articles %}
+
+        <div class='col-xs-12'>
+
+            <div class='row article-row'>
+
+                <div class='col-xs-3'>
+                    <img src="{% version item.image 'thumbnail' %}" style='width: 100%;'/>
+                </div>
+
+                <div class='col-xs-9'>
+
+                    <h2 class='article-label'>{{ item.label }}</h2>
+                    <h4 class='article-author'>Author: {{ item.author }}</h4>
+
+                    <p class='article-teaser'>
+                        {{ item.teaser }} <br>
+                        {% if current_tag.slug %}
+                            <a href='/news/{{ page.slug }}/tag={{ current_tag.slug }}/article={{ item.slug }}'>Read More</a>
+                        {% else %}
+                            <a href='/news/{{ page.slug }}/article={{ item.slug }}'>Read More</a>
+                        {% endif %}
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    {% endfor %}
+
+</div>

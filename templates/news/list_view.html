@@ -1,0 +1,76 @@
+{% extends 'detail_pages/detail_base.html' %}
+{% load front_tags %}
+
+
+{% block page-title %}
+
+    {% if current_tag.meta_title %}
+        {{ current_tag.meta_title }}
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+
+{% endblock %}
+
+
+{% block meta_description %}
+
+    {% if current_tag.meta_description %}
+        <meta name='description' content='{{ current_tag.meta_description }}'>
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+
+{% endblock %}
+
+
+{% block detail-content %}
+
+    <div class='container'>
+
+        <div class='row'>
+
+            <div id='in-page-nav' class='col-xs-4'>
+
+                {% include 'snippets/tag_list.html' %}
+
+            </div>
+
+            <div class='col-xs-1'></div>
+
+            <div id='section-copy-wrapper' class='col-xs-7'>
+
+                <div class='row'>
+
+                    <div class='section-copy col-xs-12'>
+
+                        {% front_edit 'right-section-copy' page.id %}
+
+                            <h2>Lorem ipsum dolor sit amet nihil amisi</h2>
+
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                                labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                                laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+                                voluptate velit esse cillum dolore eu fugiat
+                            </p>
+
+                        {% end_front_edit %}
+
+                        <div class='clearfix'></div>
+
+                        {% include 'snippets/article_list.html' %}
+
+                        <div class='clearfix'></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}

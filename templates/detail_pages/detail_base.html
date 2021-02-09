@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load front_tags %}
+{% load staticfiles %}
+
+{% block page-title %}
+    {% if page.meta_title %}{{ page.meta_title }}{% else %}{{ page.label }}{% endif %}
+{% endblock %}
+
+
+{% if page.meta_description %}
+    {% block meta_description %}
+        <meta name='description' content='{{ page.meta_description }}'>
+    {% endblock %}
+{% endif %}
+
+
+{% block extra-head %}
+
+    {{ block.super }}
+
+    <link type='text/css' rel='stylesheet' href='/static/css/detail.css'>
+    <link type='text/css' rel='stylesheet' href='/static/css/chosen.min.css'>
+
+    <script type='text/javascript' src="/static/js/chosen.jquery.min.js"></script>
+    <script type='text/javascript' src='/static/js/success.js'></script>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $('select').chosen();
+
+        });
+
+    </script>
+
+    {% front_edit_scripts editor='ckeditor' %}
+
+{% endblock %}
+
+
+{% block content %}
+
+    <div id='cover-image' class='wrapper' style='background-image: url("{{ page.image_cover }}")'>
+
+        {% include 'snippets/cover_image_content.html' %}
+
+    </div>
+
+    <div id='sections' class='content-gutter wrapper'>
+
+        {% block detail-content %}{% endblock %}
+
+        {% ifequal template_add_on 'staff' %}
+            <div id='template-add-on'>
+
+                {% include 'snippets/staff_addon.html' %}
+
+            </div>
+        {% endifequal %}
+
+    </div>
+
+{% endblock %}
+
+
+{% block extra-content %}
+
+    <div id='dialog-placeholder'>
+        {% include 'snippets/success_dialog.html' %}
+    </div>
+    <script type="text/javascript" src="{% static "questions/js/main.js" %}"></script>
+
+{% endblock %}
+
+
+{% if active_user %}
+    {% block user-actions %}
+
+        <span class='left'>
+            <a onclick='displayManageWindow("/admin/page_content/webpage/{{ page.id }}/")'>edit page</a>
+        </span>
+
+        {% ifequal template_add_on 'staff' %}
+            <span class='left'>
+                <a onclick='displayManageWindow("/admin/staff/member/")'>staff members</a>
+            </span>
+        {% endifequal %}
+
+        {% ifequal template_add_on 'faq' %}
+            <span class='left'>
+                <a onclick='displayManageWindow("/admin/page_content/faq/")'>faqs</a>
+            </span>
+        {% endifequal %}
+
+        {% ifequal page.template_choice 'news' %}
+            <span class='left'>
+                <a onclick='displayManageWindow("/admin/news/article/")'>articles</a>
+            </span>
+        {% endifequal %}
+
+        {% ifequal page.template_choice 'news' %}
+            <span class='left'>
+                <a onclick='displayManageWindow("/admin/news/tag/")'>article tags</a>
+            </span>
+        {% endifequal %}
+
+        {% ifequal template_add_on 'proposal' %}
+            <span class='left'>
+                <a onclick='displayManageWindow("/admin/forms/")'>form attributes</a>
+            </span>
+        {% endifequal %}
+
+    {% endblock %}
+{% endif %}

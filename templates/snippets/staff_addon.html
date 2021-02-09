@@ -1,0 +1,52 @@
+<div id='staff-wrapper'>
+
+    <div class='container'>
+
+        <div class='row'>
+
+            <div class='col-xs-12'>
+
+                <h1 style='margin-bottom: 40px;'>Our Team</h1>
+
+            </div>
+
+        </div>
+
+        <div id='staff-members' class='row'>
+
+            {% for member in page.staff_add_on %}
+                <div class='staff-member-wrapper {% if forloop.first %}first{% endif %}'>
+
+                    <div class='staff-member'>
+
+                        <a href='{{ page.url }}{{ member.url }}'>
+                            <img src='{{ member.image }}'>
+                        </a>
+
+                        <div class='copy'>
+
+                            <h2>{{ member.name }}</h2>
+                            <h4>{{ member.position }}</h4>
+
+                            <div class='home-divider'><span></span></div>
+
+                            <h3>Biography</h3>
+
+                            <p>{{ member.teaser }}</p>
+
+                        </div>
+
+                        <div class='clear-both'></div>
+
+                    </div>
+
+                    <div class='clear-both'></div>
+
+                </div>
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>

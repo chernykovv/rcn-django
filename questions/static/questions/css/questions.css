@@ -1,0 +1,170 @@
+.chosen-container {
+    border: 2px solid #DDDDDD;
+    margin-bottom: 10px;
+}
+
+.qblock{
+    display: none;
+}
+
+
+.cho-margin{
+  margin: 20px 0;
+}
+
+.long-text{
+  margin-bottom: 10px;
+  text-transform: none!important;
+  font-size: 16px;
+}
+
+.radio label, .checkbox label{
+  text-transform: none!important;
+}
+
+.form-group label {
+  font-family: Montserrat, Helvetica, Arial, sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  color: #8d8e92;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.err {
+  font-size: 12px!important;
+  position: relative;
+  top: -1px;
+  margin-bottom: 5px!important;
+  display: inline-block;
+  margin-left: 4px;
+  color: #dd433e;
+  font-family: Merriweather, Helvetica, Arial, sans-serif;
+  font-style: italic;
+  text-transform: none;
+  line-height: 1em!important;
+}
+
+#sel_val{
+  font-size: 12px!important;
+  position: relative;
+  top: -1px;
+  margin-bottom: 5px!important;
+  display: inline-block;
+  margin-left: 4px;
+  color: #dd433e;
+  font-family: Merriweather, Helvetica, Arial, sans-serif;
+  font-style: italic;
+  text-transform: none;
+  line-height: 1em!important;
+}
+
+#che_val{
+  font-size: 12px!important;
+  position: relative;
+  top: -1px;
+  margin-bottom: 5px!important;
+  display: inline-block;
+  margin-left: 4px;
+  color: #dd433e;
+  font-family: Merriweather, Helvetica, Arial, sans-serif;
+  font-style: italic;
+  text-transform: none;
+  line-height: 1em!important;
+}
+
+#err_email{
+  font-size: 12px!important;
+  position: relative;
+  top: -1px;
+  margin-bottom: 5px!important;
+  display: inline-block;
+  margin-left: 4px;
+  color: #dd433e;
+  font-family: Merriweather, Helvetica, Arial, sans-serif;
+  font-style: italic;
+  text-transform: none;
+  line-height: 1em!important;
+}
+
+#err_phone{
+  font-size: 12px!important;
+  position: relative;
+  top: -1px;
+  margin-bottom: 5px!important;
+  display: inline-block;
+  margin-left: 4px;
+  color: #dd433e;
+  font-family: Merriweather, Helvetica, Arial, sans-serif;
+  font-style: italic;
+  text-transform: none;
+  line-height: 1em!important;
+}
+
+
+label {
+  margin-bottom: 11px;
+}
+
+.radio {
+  margin: 10px 0;
+}
+
+.radio input[type=radio]{
+  position: relative;
+  margin-right: 3px;
+}
+
+.custom-input{
+  width: 300px!important;
+}
+
+/* Style the form */
+.custom-input:hover::-webkit-input-placeholder { color:transparent; }
+.custom-input:hover:-moz-placeholder { color:transparent; } /* FF 4-18 */
+.custom-input:hover::-moz-placeholder { color:transparent; } /* FF 19+ */
+.custom-input:hover:-ms-input-placeholder { color:transparent; } /* IE 10+ */
+  
+  /* Style the input fields */
+  input {
+    padding: 10px;
+    font-size: 17px;
+    font-family: Raleway;
+    border: 1px solid #aaaaaa;
+  }
+  
+  /* Mark input boxes that gets an error on validation: */
+  input.invalid {
+    border: 1px solid #dd433e;
+  }
+  
+  /* Hide all steps by default: */
+  .tab {
+    display: none;
+  }
+  
+  /* Make circles that indicate the steps of the form: */
+  .step {
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    background-color: #bbbbbb;
+    border: none; 
+    border-radius: 50%;
+    display: inline-block;
+    opacity: 0.5;
+  }
+  
+  /* Mark the active step: */
+  .step.active {
+    opacity: 1;
+  }
+  
+  /* Mark the steps that are finished and valid: */
+  .step.finish {
+    background-color: #4CAF50;
+  }
+
+  .btn{
+      display: inline-block;
+  }

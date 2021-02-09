@@ -1,0 +1,16 @@
+<ul class='no-list'>
+
+    <li class='top-level list-header'>{{ page_link.title }}</li>
+
+    {% for link in page_link.links %}
+        <li class='{% if link.page.id %}{% ifequal page.id link.page.id %}active{% endifequal %}{% endif %}'>
+
+            <a class='{% if forloop.first %}first{% endif %}{% if forloop.last %}last{% endif %}'
+               href='{{ link.url }}'>
+                {{ link.title }}
+            </a>
+
+        </li>
+    {% endfor %}
+
+</ul>

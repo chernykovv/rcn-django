@@ -1,0 +1,1328 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_static admin_modify suit_tags admin_urls %}
+{% load url from future %}
+
+{% block extrahead %}{{ block.super }}
+  {% url 'admin:jsi18n' as jsi18nurl %}
+  <script type="text/javascript" src="{{ jsi18nurl|default:"../../../jsi18n/" }}"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.js"></script>
+  <script>window.CKEDITOR_BASEPATH = '/static/ckeditor/ckeditor/';</script>
+  <link type="text/css" rel="stylesheet" href="{% static "questions/css/questions_com.css" %}">
+  <style>textarea{height: 211px;} #field_2{height: 87px;}
+      .modal .modal-dialog {top: 10%;}
+      .modal-body {max-height: 550px;height: 600px;}
+      .modal-dialog {height: 520px;}
+
+    #modal-one-slider .modal-dialog {
+    height: 435px;
+  }
+  </style>
+  {{ media }}
+
+{% endblock %}
+
+
+{% block extrajs %}
+  {{ block.super }}
+
+  {% if 'CONFIRM_UNSAVED_CHANGES'|suit_conf %}
+    <!-- Warn on leaving unsaved form -->
+    <script src="{% static 'suit/js/suit-form-confirm.js' %}"></script>
+    <script type="text/javascript">
+      confirmExitIfModified('{{ opts.module_name }}_form', '{% trans 'You have unsaved changes' %}.');
+    </script>
+  {% endif %}
+
+  {% if adminform.model_admin.suit_form_tabs %}
+    <script type="text/javascript">
+    (function ($) {
+      $(function () {
+        $('#suit_form_tabs').suit_form_tabs();
+      });
+    }(Suit.$))
+    </script>
+  {% endif %}
+
+  <script>
+    (function ($) {
+      $(function () {
+        $("#{{ opts.module_name }}_form").suit_form_debounce();
+      });
+    }(Suit.$))
+  </script>
+  <style>
+    #id_banner-0-description{
+      margin: 0px; width: 443px; height: 100px;
+    }
+    #id_banner-0-message{
+      margin: 20px 0;
+      width: 250px;
+    }
+  </style>
+
+{% endblock %}
+1
+{% block extrastyle %}
+  {{ block.super }}
+{% endblock %}
+
+{% block content_title_value %}
+  {% trans 'Add' %} {{ opts.verbose_name }}
+{% endblock %}
+
+{% block coltype %}{% if ordered_objects %}colMS{% else %}colM{% endif %}{% endblock %}
+
+{% block bodyclass %}{{ opts.app_label }}-{{ opts.object_name.lower }} change-form{% endblock %}
+
+{% if not is_popup %}
+  {% block breadcrumbs %}
+    <ul class="breadcrumb">
+      <li>
+        <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+        <span class="divider">&raquo;</span>
+      </li>
+      <li>
+        <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{% firstof opts.app_config.verbose_name app_label|capfirst|escape %}</a>
+        <span class="divider">&raquo;</span>
+      </li>
+      <li>
+        {% if has_change_permission %}
+          <a href="{% url opts|admin_urlname:'changelist' %}">
+            {{ opts.verbose_name_plural|capfirst }}</a>{% else %}
+          {{ opts.verbose_name_plural|capfirst }}{% endif %}
+        <span class="divider">&raquo;</span>
+      </li>
+      <li class="active">
+        {% if add %}{% trans 'Add' %} {{ opts.verbose_name }}{% else %}{{ original|truncatewords:"18" }}{% endif %}
+      </li>
+    </ul>
+  {% endblock %}
+{% endif %}
+
+{% block content %}
+  <div id="content-main" class="inner-two-columns">
+
+    <form {% if has_file_field %}enctype="multipart/form-data" {% endif %}action="{{ form_url }}" method="post"
+          id="{{ opts.module_name }}_form" class="form-horizontal">
+
+      <div class="inner-right-column">
+
+        <div class="box save-box">
+
+          {% block submit_buttons_bottom %}{% submit_row %}{% endblock %}
+
+        </div>
+
+        {% block object-tools %}
+          {% if change %}{% if not is_popup %}
+            <h4 class="italic-title">{% trans 'tools'|capfirst %}</h4>
+            <ul class="box menu-box">
+              {% block object-tools-items %}
+                <li><a href="history/" class="historylink"><i
+                    class="icon-time icon-alpha75"></i>{% trans "History" %}</a>
+                </li>
+                {% if has_absolute_url %}
+                  <li>
+                    <a href="{{ original.get_absolute_url }}" class="viewsitelink"><i class="icon-eye-open icon-alpha75"></i>{% trans "View on site" %}</a>
+                  </li>
+                {% endif %}
+
+                {% if has_add_permission %}
+                  <li>
+                    <a href="../add/"><i class="icon-plus-sign icon-alpha75"></i>{% blocktrans with opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}
+                    </a></li>
+                  {# {% blocktrans with cl.opts.verbose_name as name %}Add {{ name }}{% endblocktrans %}</a>#}
+                {% endif %}
+
+              {% endblock %}
+            </ul>
+          {% endif %}{% endif %}
+        {% endblock %}
+
+      {% block sidebar %}{% endblock %}
+
+      </div>
+      <div class="inner-center-column">
+        {% csrf_token %}{% block form_top %}{% endblock %}
+        {% block suit_form_tabs %}
+          {% if adminform.model_admin.suit_form_tabs %}
+            <ul id="suit_form_tabs" class="nav nav-tabs nav-tabs-suit" data-tab-prefix="suit-tab">
+              {% for tab in adminform.model_admin.suit_form_tabs %}
+                <li><a href="#{{ tab.0 }}">{{ tab.1 }}</a></li>{% endfor %}
+            </ul>
+          {% endif %}
+        {% endblock %}
+        <div class="tab-content tab-content-main">
+          {% if is_popup %}
+            <input type="hidden" name="_popup" value="1"/>{% endif %}
+          {% if errors %}
+            <div class="alert alert-error">
+              {% blocktrans count counter=errors|length %}Please correct the error below.{% plural %} Please correct the errors below.{% endblocktrans %}
+              {{ adminform.form.non_field_errors }}
+            </div>
+          {% endif %}
+
+          {# render suit_form_includes at top position #}
+          {% include 'suit/includes/change_form_includes.html' with position='top' %}
+
+
+          {% block field_sets %}
+            {% for fieldset in adminform %}
+              <fieldset style="border: 1px solid #dfdfdf; margin-bottom: 20px; height: 60px;" class="module aligned{{ fieldset.name|yesno:' with-legend, first' }} {{ fieldset.classes }}" >
+              {% if fieldset.name %}
+                  <h2 class="legend">{{ fieldset.name }}
+                      {% if fieldset.description %}
+                          <span class="description">{{ fieldset.description|safe }}</span>
+                      {% endif %}
+                  </h2>{% endif %}
+            {% for line in fieldset %}
+              {% with singlefield=line.fields|length_is:'1' %}
+                <div class="control-group form-row{% if line.errors %} {{ singlefield|yesno:'error,first-error' }} errors{% endif %}{% for field in line %}{% if field.field.name %} field-{{ field.field.name }}{% endif %} {{ field.field.field.widget.attrs.rowclass }}{% endfor %}{{ singlefield|yesno:',multi-field-row' }}">
+                  {% for field in line %}
+                    {% spaceless %}
+
+                  {# write special control tags only for first multi field #}
+                  {% if forloop.first %}
+                      <div{% if not singlefield %}
+                          class="field-box{% if field.field.name %} field-{{ field.field.name }}{% endif %}"{% endif %}>
+
+                      <div class="control-label" style="background-color: transparent;">
+                          {% if field.field.name == 'title' %}
+                            {{ field.label_tag }}
+                          {% endif %}
+                      </div>
+                      <div class="controls" style="background-color: transparent;">
+                      {# if multi-fields and first field #}
+                      {% if not singlefield %}
+                        <div class="multi-field-box">
+                      {% endif %}
+                  {% else %}
+                    {# If multi-fields and not first wrap also label #}
+                    {% if not singlefield and not forloop.first %}
+                      <div class="multi-field-box{{ field.errors|yesno:' error,' }}">
+                    {% endif %}
+
+
+                    {% if field.field.name == 'title' %}
+                    {{ field.label_tag }}
+                  {% endif %}
+                  {% endif %}
+
+                  {% if not field.is_readonly and field.errors %}<div class="inline error errors">{% endif %}
+
+                  {# If multi-fields and wrap controls too #}
+                  {% if not singlefield %}
+                      <div class="multi-field-controls">
+                    {% endif %}
+
+                  {% if field.is_readonly %}
+                      <span class="readonly">{{ field|field_contents_foreign_linked }}</span>
+                  {% elif field.field.name == 'title' %}
+                    {{ field.field }}
+                  {% endif %}
+
+                  {# For single field errors#}
+                  {% if singlefield and line.errors %}
+                      <span class="help-inline">{{ line.errors }}</span>
+                  {% endif %}
+
+                  {# For multi field errors #}
+                  {% if field.errors and not singlefield and not field.is_readonly %}
+                    <span class="help-block">{{ field.errors|striptags }}</span>
+                  {% endif %}
+
+                  {% if field.field.help_text %}
+                    <span class="{% if line.errors or field.errors or not singlefield %}help-block{% else %}help-inline{% endif %}">{{ field.field.help_text|safe }}</span>
+                  {% endif %}
+
+                  {% if not field.is_readonly and field.errors %}</div>{% endif %}
+
+                  {% if not singlefield %}
+                  </div> {# close multi-controls #}
+                  </div> {# close multi-field-box #}
+                  {% endif %}
+
+                  {% if forloop.last %}
+                      </div>
+                      </div>
+                  {% endif %}
+
+                    {% endspaceless %}
+                  {% endfor %}
+
+                </div>
+              {% endwith %}
+            {% endfor %}
+          </fieldset>
+          {# For closing line #}
+          {% if 'plugin-holder' in fieldset.classes %}
+            <hr class="plugin-holder-separator">
+          {% endif %}
+            {% endfor %}
+          {% endblock %}
+
+          {% block field_sets8 %}
+            {% for fieldset in adminform %}
+              <fieldset style="border: 1px solid #dfdfdf; margin-bottom: 0px; height: 60px;" class="module aligned{{ fieldset.name|yesno:' with-legend, first' }} {{ fieldset.classes }}" >
+              {% if fieldset.name %}
+                  <h2 class="legend">{{ fieldset.name }}
+                      {% if fieldset.description %}
+                          <span class="description">{{ fieldset.description|safe }}</span>
+                      {% endif %}
+                  </h2>{% endif %}
+            {% for line in fieldset %}
+              {% with singlefield=line.fields|length_is:'1' %}
+                <div class="control-group form-row{% if line.errors %} {{ singlefield|yesno:'error,first-error' }} errors{% endif %}{% for field in line %}{% if field.field.name %} field1-{{ field.field.name }}{% endif %} {{ field.field.field.widget.attrs.rowclass }}{% endfor %}{{ singlefield|yesno:',multi-field-row' }}">
+                  {% for field in line %}
+                    {% spaceless %}
+
+                  {# write special control tags only for first multi field #}
+                  {% if forloop.first %}
+                      <div{% if not singlefield %}
+                          class="field-box{% if field.field.name %} field1-{{ field.field.name }}{% endif %}"{% endif %}>
+
+                      <div class="control-label" style="background-color: transparent;">
+                          {% if field.field.name == 'slug' %}
+                            {{ field.label_tag }}
+                          {% endif %}
+                      </div>
+
+                      <div class="controls" style="background-color: transparent;">
+                      {# if multi-fields and first field #}
+                      {% if not singlefield %}
+                        <div class="multi-field-box">
+                      {% endif %}
+                  {% else %}
+                    {# If multi-fields and not first wrap also label #}
+                    {% if not singlefield and not forloop.first %}
+                      <div class="multi-field-box{{ field.errors|yesno:' error,' }}">
+                    {% endif %}
+
+
+                    {% if field.field.name == 'slug' %}
+                    {{ field.label_tag }}
+                  {% endif %}
+                  {% endif %}
+
+                  {% if not field.is_readonly and field.errors %}<div class="inline error errors">{% endif %}
+
+                  {# If multi-fields and wrap controls too #}
+                  {% if not singlefield %}
+                      <div class="multi-field-controls">
+                    {% endif %}
+
+                  {% if field.is_readonly %}
+                      <span class="readonly">{{ field|field_contents_foreign_linked }}</span>
+                  {% elif field.field.name == 'slug' %}
+                    {{ field.field }}
+                    <input class="vTextField" id="time_1" maxlength="100" name="time_1" type="hidden" value="text">
+                    <input class="vTextField" id="time_2" maxlength="100" name="time_2" type="hidden" value="text">
+                  {% endif %}
+
+                  {# For single field errors#}
+                  {% if singlefield and line.errors %}
+                      <span class="help-inline">{{ line.errors }}</span>
+                  {% endif %}
+
+                  {# For multi field errors #}
+                  {% if field.errors and not singlefield and not field.is_readonly %}
+                    <span class="help-block">{{ field.errors|striptags }}</span>
+                  {% endif %}
+
+                  {% if field.field.help_text %}
+                    <span class="{% if line.errors or field.errors or not singlefield %}help-block{% else %}help-inline{% endif %}">{{ field.field.help_text|safe }}</span>
+                  {% endif %}
+
+                  {% if not field.is_readonly and field.errors %}</div>{% endif %}
+
+                  {% if not singlefield %}
+                  </div> {# close multi-controls #}
+                  </div> {# close multi-field-box #}
+                  {% endif %}
+
+                  {% if forloop.last %}
+                      </div>
+                      </div>
+                  {% endif %}
+
+                    {% endspaceless %}
+                  {% endfor %}
+
+                </div>
+              {% endwith %}
+            {% endfor %}
+          </fieldset>
+          {# For closing line #}
+          {% if 'plugin-holder' in fieldset.classes %}
+            <hr class="plugin-holder-separator">
+          {% endif %}
+            {% endfor %}
+          {% endblock %}
+
+
+
+          {% for inline_admin_formset in inline_admin_formsets %}
+                {% if inline_admin_formset.opts.verbose_name == "banner" %}
+
+                    <div class="inline-group {{ inline_admin_formset.opts.suit_classes }}" id="{{ inline_admin_formset.formset.prefix }}-group">
+
+                        <div class="tabular {% if forloop.last %}last-related{% endif %}">
+
+                        {{ inline_admin_formset.formset.management_form }}
+                      <fieldset class="module" style="border: 1px solid #dfdfdf; margin-bottom: 50px;">
+                         {{ inline_admin_formset.formset.non_form_errors }}
+
+                         <table class="table table-bordered table-condensed">
+                           <thead><tr>
+                           {% for field in inline_admin_formset.fields %}
+                             {% if not field.widget.is_hidden and not field.label == 'Is active' %}
+                               <th{% if forloop.first %} colspan="1"{% endif %}{% if field.required %} class="required"{% endif %}>{{ field.label|capfirst }}
+                               {% if field.help_text %}&nbsp;<img src="{% static "admin/img/icon-unknown.gif" %}" class="help help-tooltip" width="10" height="10" alt="({{ field.help_text|striptags }})" title="{{ field.help_text|striptags }}" />{% endif %}
+                               </th>
+                               {% else %}
+                               <th></th>
+                             {% endif %}
+                           {% endfor %}
+                           {% if inline_admin_formset.formset.can_delete %}<th></th>{% endif %}
+                           </tr></thead>
+
+                           <tbody>
+                           {% for inline_admin_form in inline_admin_formset %}
+                              {% if inline_admin_form.form.non_field_errors %}
+                              <tr><td colspan="{{ inline_admin_form|cell_count }}"><div class="control-group error"><div class="help-block">{{ inline_admin_form.form.non_field_errors }}</div></div></td></tr>
+                              {% endif %}
+                              <tr class="form-row {% cycle "row1" "row2" %} {% if inline_admin_form.original or inline_admin_form.show_url %}has_original{% endif %}{% if forloop.last %} empty-form{% endif %}"
+                                   id="{{ inline_admin_formset.formset.prefix }}-{% if not forloop.last %}{{ forloop.counter0 }}{% else %}empty{% endif %}">
+
+                              {% for fieldset in inline_admin_form %}
+                                {% for line in fieldset %}
+                                  {% for field in line %}
+
+                                    <td{% if field.field.name %} class="field-{{ field.field.name }}{{ field.field.errors|yesno:' control-group error,' }}{{ field.field.errors|yesno:' control-group error,' }}"{% endif %}>
+
+                                    {% if forloop.parentloop.first %}
+                                      {% if inline_admin_form.has_auto_field or inline_admin_form.needs_explicit_pk_field %}{{ inline_admin_form.pk_field.field }}{% endif %}
+                                      {{ inline_admin_form.fk_field.field }}
+                                      {% spaceless %}
+                                        {% for fieldset in inline_admin_form %}
+                                          {% for line in fieldset %}
+                                            {% for field in line %}
+                                              {% if field.is_hidden %} {{ field.field }} {% endif %}
+                                            {% endfor %}
+                                          {% endfor %}
+                                        {% endfor %}
+                                      {% endspaceless %}
+                                    {% endif %}
+
+                                    {% block field_content %}
+                                      {% if field.is_readonly %}
+                                          <p>{{ field.contents }}</p>
+                                      {% else %}
+                                        {% if field.field.errors %}
+                                          <div class="help-block">
+                                          {{ field.field.errors.as_ul }}
+                                          </div>
+                                        {% endif %}
+                                        {{ field.field }}
+                                      {% endif %}
+                                    {% endblock %}
+                                    </td>
+                                  {% endfor %}
+                                {% endfor %}
+                              {% endfor %}
+                              {% if inline_admin_formset.formset.can_delete %}
+                                <td class="delete">{% if inline_admin_form.original %}{{ inline_admin_form.deletion_field.field }}{% endif %}</td>
+                              {% endif %}
+                              </tr>
+                           {% endfor %}
+                           </tbody>
+                         </table>
+                      </fieldset>
+                        </div>
+                      </div>
+                      <style>
+                        .alert{
+                          display:none;
+                        }
+                      </style>
+
+                      <script type="text/javascript">
+                      (function($) {
+                          $(document).ready(function($) {
+                            window.onbeforeunload = null;
+                          //  alert(window.location.href.indexOf("add"));
+
+                          if (window.location.href.indexOf("add") == -1) {
+                          //  $("#modal_form").attr("action", '/document/create/{{com_pk}}/');
+                          }else{
+                             $('button[name="_continue"]').click();
+                          }
+
+                              var rows = "#{{ inline_admin_formset.formset.prefix }}-group .tabular.inline-related tbody tr";
+                              var alternatingRows = function(row) {
+                                  $(rows).not(".add-row").removeClass("row1 row2")
+                                      .filter(":even").addClass("row1").end()
+                                      .filter(rows + ":odd").addClass("row2");
+                              }
+                              var reinitDateTimeShortCuts = function() {
+                                  // Reinitialize the calendar and clock widgets by force
+                                  if (typeof DateTimeShortcuts != "undefined") {
+
+                                      DateTimeShortcuts.init();
+                                  }
+                              }
+                              var updateSelectFilter = function() {
+                                  // If any SelectFilter widgets are a part of the new form,
+                                  // instantiate a new SelectFilter instance for it.
+                                  if (typeof SelectFilter != "undefined"){
+                                      $(".selectfilter").each(function(index, value){
+                                        var namearr = value.name.split('-');
+                                        SelectFilter.init(value.id, namearr[namearr.length-1], false, "{% static "admin/" %}");
+                                      });
+                                      $(".selectfilterstacked").each(function(index, value){
+                                        var namearr = value.name.split('-');
+                                        SelectFilter.init(value.id, namearr[namearr.length-1], true, "{% static "admin/" %}");
+                                      });
+                                  }
+                              }
+                              var initPrepopulatedFields = function(row) {
+                                  row.find('.prepopulated_field').each(function() {
+                                      var field = $(this);
+                                      var input = field.find('input, select, textarea');
+                                      var dependency_list = input.data('dependency_list') || [];
+                                      var dependencies = [];
+                                      $.each(dependency_list, function(i, field_name) {
+                                        dependencies.push('#' + row.find('.field-' + field_name).find('input, select, textarea').attr('id'));
+                                      });
+                                      if (dependencies.length) {
+                                          input.prepopulate(dependencies, input.attr('maxlength'));
+                                      }
+                                  });
+                              }
+                              $(rows).formset({
+                                  prefix: "{{ inline_admin_formset.formset.prefix }}",
+                                  addText: "{% blocktrans with verbose_name=inline_admin_formset.opts.verbose_name|title %}Add another {{ verbose_name }}{% endblocktrans %}",
+                                  formCssClass: "dynamic-{{ inline_admin_formset.formset.prefix }}",
+                                  deleteCssClass: "inline-deletelink",
+                                  deleteText: "{% trans "Remove" %}",
+                                  emptyCssClass: "empty-form",
+                                  removed: alternatingRows,
+                                  added: (function(row) {
+                                      initPrepopulatedFields(row);
+                                      reinitDateTimeShortCuts();
+                                      updateSelectFilter();
+                                      alternatingRows(row);
+                                      Suit.after_inline.run("{{ inline_admin_formset.formset.prefix }}", row);
+                                  })
+                              });
+                          });
+                      })(django.jQuery);
+                      </script>
+                        <script>
+                                CKEDITOR.config.keystrokes = [];
+                            </script>
+
+                {% else %}
+
+                {% endif %}
+            {% endfor %}
+
+
+            <div class="content-wrapper" style="border: 1px solid #dfdfdf; margin-bottom: 0px;">
+              <section class="content" style="margin-bottom: 20px;">
+                <div class="row">
+                  <div class="col-12">
+                    <div class="box" style="background: none; position: relative; left: 10px; padding: 0 10px">
+                      <div class="box-body no-padding">
+                        <div class="table-responsive">
+                          <table class="table table-hover">
+                            <tr style="background: #F6F7F8;">
+                              <th style="border: none; background: #F6F7F8;">Title</th>
+                              <th style="border: none; background: #F6F7F8;">Description</th>
+                              <th class="actions-header" style="border: none; background: #F6F7F8;">Actions</th>
+                            </tr>
+                            {% for cat in category %}
+                              <tr id="{{ cat.pk }}" >
+                                <td class="mailbox-name">{{ cat.title }}</td>
+                                <td class="mailbox-name">{{ cat.description }}</td>
+                                <td class="r-btn">
+                                  <button data-url="/doccategory/delete/{{ cat.pk }}/" type="button" class="btn btn-sm action-button action-delete">
+                                    Delete
+                                  </button>
+                                  <button data-pk="{{ cat.pk }}" data-edit="/doccategory/update/{{ cat.pk }}/"
+                                    data-title="{{ cat.title }}" data-description="{{ cat.description }}"  type="button" class="btn btn-sm action-button action-edit-cat">
+                                    Edit
+                                  </button>
+                                </td>
+                              </tr>
+                            {% empty %}
+                              <tr>
+                                <td colspan="6">
+                                  <h4>You have no category available.</h4>
+                                </td>
+                              </tr>
+                            {% endfor %}
+                          </table>
+                        </div>
+                        <div class="name-head">
+                          <a href="javascript:void(0);" style="float: right; margin: 0 10px" class="btn btn-big action-create-cat">New Category</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+            </div>
+
+
+          <div class="content-wrapper" style="border: 1px solid #dfdfdf; margin-bottom: 0px;">
+            <section class="content" style="margin-bottom: 20px;">
+              <div class="row">
+                <div class="col-12">
+                  <div class="box" style="background: none; position: relative; left: 10px; padding: 0 10px">
+                    <div class="box-body no-padding">
+                      <div class="table-responsive">
+                        <table class="table table-hover">
+                          <tr style="background: #F6F7F8;">
+                            <th style="border: none; background: #F6F7F8;">Title</th>
+                            <th style="border: none; background: #F6F7F8;">Description</th>
+                              <th style="border: none; background: #F6F7F8;">Category</th>
+                            <th class="actions-header" style="border: none; background: #F6F7F8;">Actions</th>
+                          </tr>
+                          {% for document in documents %}
+                            <tr id="{{ document.pk }}" >
+                              <td class="mailbox-name">{{ document.title }}</td>
+                              <td class="mailbox-name">{{ document.description }}</td>
+                                <td class="mailbox-name">{{ document.category.title }}</td>
+                              <td class="r-btn">
+                                <button data-url="/document/delete/{{ document.pk }}/" type="button" class="btn btn-sm action-button action-delete">
+                                  Delete
+                                </button>
+                                <button data-pk="{{ document.pk }}" data-url="{% if document.file %}{{ document.file.url }}{% endif %}" data-edit="/document/update/{{ document.pk }}/"
+                                  data-title="{{ document.title }}" data-category="{{ document.category.pk }}" data-description="{{ document.description }}"  type="button" class="btn btn-sm action-button action-edit">
+                                  Edit
+                                </button>
+                              </td>
+                            </tr>
+                          {% empty %}
+                            <tr>
+                              <td colspan="6">
+                                <h4>You have no documents available.</h4>
+                              </td>
+                            </tr>
+                          {% endfor %}
+                        </table>
+                      </div>
+                      <div class="name-head">
+                        <a href="javascript:void(0);" style="float: right; margin: 0 10px" class="btn btn-big action-create">New Document</a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+
+
+<br>
+
+
+                    <div class="content-wrapper" style="border: 1px solid #dfdfdf; margin-bottom: 0px;">
+                      <section class="content" style="margin-bottom: 20px;">
+                        <div class="row">
+                          <div class="col-12">
+                            <div class="box" style="background: none; position: relative; left: 10px; padding: 0 10px">
+                              <div class="box-body no-padding">
+                                <div class="table-responsive">
+                                  <table class="table table-hover">
+                                    <tr style="background: #F6F7F8;">
+                                      <th style="border: none; background: #F6F7F8;">Image</th>
+                                      <th style="border: none; background: #F6F7F8;">Order</th>
+
+                                      <th class="actions-header" style="border: none; background: #F6F7F8;">Actions</th>
+                                    </tr>
+                                    {% for slider in comsliders %}
+                                      <tr id="{{ slider.pk }}" >
+                                        <td class="mailbox-name">
+                                          <img src="{{MEDIA_URL}}{{ slider.file }}" style="height:60px;">
+
+                                          </td>
+
+                                          <td class="mailbox-name">
+                                            {{ slider.order }}
+
+                                            </td>
+
+                                        <td class="r-btn">
+                                          <button data-url="/comsliders/delete/{{ slider.pk }}/" type="button" class="btn btn-sm action-button action-delete">
+                                            Delete
+                                          </button>
+                                          <button data-pk="{{ slider.pk }}" data-url="{% if slider.file %}{{ slider.file.url }}{% endif %}" data-edit="/comsliders/update/{{ slider.pk }}/"
+                                          type="button" class="btn btn-sm action-button action-edit-slider" data-order="{{ slider.order }}">
+                                            Edit
+                                          </button>
+                                        </td>
+                                      </tr>
+                                    {% empty %}
+                                      <tr>
+                                        <td colspan="6">
+                                          <h4>You have no slider available.</h4>
+                                        </td>
+                                      </tr>
+                                    {% endfor %}
+                                  </table>
+                                </div>
+                                <div class="name-head">
+                                  <a href="javascript:void(0);" style="float: right; margin: 0 10px" class="btn btn-big action-create-slider">New slider image</a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </section>
+                    </div>
+
+
+
+        {% block field_sets_3 %}
+        {% for fieldset in adminform %}
+          <fieldset style="height: 0px; postion: relative; bottom: 25px;" class="module aligned{{ fieldset.name|yesno:' with-legend, first' }} {{ fieldset.classes }}" >
+          {% if fieldset.name %}
+              <h2 class="legend">{{ fieldset.name }}
+                  {% if fieldset.description %}
+                      <span class="description">{{ fieldset.description|safe }}</span>
+                  {% endif %}
+              </h2>{% endif %}
+        {% for line in fieldset %}
+          {% with singlefield=line.fields|length_is:'1' %}
+            <div class="control-group form-row{% if line.errors %} {{ singlefield|yesno:'error,first-error' }} errors{% endif %}{% for field in line %}{% if field.field.name %} field-{{ field.field.name }}{% endif %} {{ field.field.field.widget.attrs.rowclass }}{% endfor %}{{ singlefield|yesno:',multi-field-row' }}">
+              {% for field in line %}
+                {% spaceless %}
+
+              {# write special control tags only for first multi field #}
+              {% if forloop.first %}
+                  <div{% if not singlefield %}
+                      class="field-box{% if field.field.name %} field-{{ field.field.name }}{% endif %}"{% endif %}>
+
+                  <div class="control-label" style="background-color: transparent;">
+                      {% if field.field.name == 'variable_title' %}
+                        {{ field.label_tag }}
+                      {% endif %}
+                  </div>
+                  <div class="controls" style="background-color: transparent;">
+                  {# if multi-fields and first field #}
+                  {% if not singlefield %}
+                    <div class="multi-field-box">
+                  {% endif %}
+              {% else %}
+                {# If multi-fields and not first wrap also label #}
+                {% if not singlefield and not forloop.first %}
+                  <div class="multi-field-box{{ field.errors|yesno:' error,' }}">
+                {% endif %}
+
+
+                {% if field.field.name == 'variable_title' %}
+                {{ field.label_tag }}
+              {% endif %}
+              {% endif %}
+
+              <style>#id_variable_title{
+                z-index: 1000;
+                position: relative;
+              }
+              </style>
+
+              {% if not field.is_readonly and field.errors %}<div class="inline error errors">{% endif %}
+
+              {# If multi-fields and wrap controls too #}
+              {% if not singlefield %}
+                  <div class="multi-field-controls">
+                {% endif %}
+
+              {% if field.is_readonly %}
+                  <span class="readonly">{{ field|field_contents_foreign_linked }}</span>
+              {% elif field.field.name == 'variable_title' %}
+                {{ field.field }}
+              {% endif %}
+
+              {# For single field errors#}
+              {% if singlefield and line.errors %}
+                  <span class="help-inline">{{ line.errors }}</span>
+              {% endif %}
+
+              {# For multi field errors #}
+              {% if field.errors and not singlefield and not field.is_readonly %}
+                <span class="help-block">{{ field.errors|striptags }}</span>
+              {% endif %}
+
+              {% if field.field.help_text %}
+                <span class="{% if line.errors or field.errors or not singlefield %}help-block{% else %}help-inline{% endif %}">{{ field.field.help_text|safe }}</span>
+              {% endif %}
+
+              {% if not field.is_readonly and field.errors %}</div>{% endif %}
+
+              {% if not singlefield %}
+              </div> {# close multi-controls #}
+              </div> {# close multi-field-box #}
+              {% endif %}
+
+              {% if forloop.last %}
+                  </div>
+                  </div>
+              {% endif %}
+
+                {% endspaceless %}
+              {% endfor %}
+
+            </div>
+          {% endwith %}
+        {% endfor %}
+      </fieldset>
+      {# For closing line #}
+      {% if 'plugin-holder' in fieldset.classes %}
+        <hr class="plugin-holder-separator">
+      {% endif %}
+        {% endfor %}
+      {% endblock %}
+
+
+          {% block field_sets_2 %}
+          {% for fieldset in adminform %}
+            <fieldset class="module aligned{{ fieldset.name|yesno:' with-legend, first' }} {{ fieldset.classes }}" style="border: 1px solid #dfdfdf; padding-top: 50px">
+            {% if fieldset.name %}
+                <h2 class="legend">{{ fieldset.name }}
+                    {% if fieldset.description %}
+                        <span class="description">{{ fieldset.description|safe }}</span>
+                    {% endif %}
+                </h2>{% endif %}
+          {% for line in fieldset %}
+            {% with singlefield=line.fields|length_is:'1' %}
+              <div class="control-group form-row{% if line.errors %} {{ singlefield|yesno:'error,first-error' }} errors{% endif %}{% for field in line %}{% if field.field.name %} field-{{ field.field.name }}{% endif %} {{ field.field.field.widget.attrs.rowclass }}{% endfor %}{{ singlefield|yesno:',multi-field-row' }}">
+                {% for field in line %}
+                  {% spaceless %}
+
+                {# write special control tags only for first multi field #}
+                {% if forloop.first %}
+                    <div{% if not singlefield %}
+                        class="field-box{% if field.field.name %} field-{{ field.field.name }}{% endif %}"{% endif %}>
+
+                    <div class="control-label" style="background-color: transparent;">
+                        {% if field.field.name == 'variable_section' %}
+                          {{ field.label_tag }}
+                        {% endif %}
+                    </div>
+                    <div class="controls" style="background-color: transparent;">
+                    {# if multi-fields and first field #}
+                    {% if not singlefield %}
+                      <div class="multi-field-box">
+                    {% endif %}
+                {% else %}
+                  {# If multi-fields and not first wrap also label #}
+                  {% if not singlefield and not forloop.first %}
+                    <div class="multi-field-box{{ field.errors|yesno:' error,' }}">
+                  {% endif %}
+                  {% if field.field.name == 'variable_section' %}
+                    {{ field.label_tag }}
+                  {% endif %}
+
+                {% endif %}
+
+                {% if not field.is_readonly and field.errors %}<div class="inline error errors">{% endif %}
+
+                {# If multi-fields and wrap controls too #}
+                {% if not singlefield %}
+                    <div class="multi-field-controls">
+                  {% endif %}
+
+                {% if field.is_readonly %}
+                    <span class="readonly">{{ field|field_contents_foreign_linked }}</span>
+                {% elif field.field.name == 'variable_section' %}
+                  {{ field.field }}
+                {% endif %}
+
+                {# For single field errors#}
+                {% if singlefield and line.errors %}
+                    <span class="help-inline">{{ line.errors }}</span>
+                {% endif %}
+
+                {# For multi field errors #}
+                {% if field.errors and not singlefield and not field.is_readonly %}
+                  <span class="help-block">{{ field.errors|striptags }}</span>
+                {% endif %}
+
+                {% if field.field.help_text %}
+                  <span class="{% if line.errors or field.errors or not singlefield %}help-block{% else %}help-inline{% endif %}">{{ field.field.help_text|safe }}</span>
+                {% endif %}
+
+                {% if not field.is_readonly and field.errors %}</div>{% endif %}
+
+                {% if not singlefield %}
+                </div> {# close multi-controls #}
+                </div> {# close multi-field-box #}
+                {% endif %}
+
+                {% if forloop.last %}
+                    </div>
+                    </div>
+                {% endif %}
+
+                  {% endspaceless %}
+                {% endfor %}
+
+              </div>
+            {% endwith %}
+          {% endfor %}
+        </fieldset>
+        {# For closing line #}
+        {% if 'plugin-holder' in fieldset.classes %}
+          <hr class="plugin-holder-separator">
+        {% endif %}
+          {% endfor %}
+        {% endblock %}
+
+          {% block after_field_sets %}{% endblock %}
+
+          {# render suit_form_includes at middle position #}
+          {% include 'suit/includes/change_form_includes.html' with position='middle' %}
+
+        </div>
+
+        {% block after_related_objects %}{% endblock %}
+
+        {# render suit_form_includes at last position #}
+        {% include 'suit/includes/change_form_includes.html' with position='bottom' %}
+
+        {% if adminform and add %}
+          <script type="text/javascript">document.getElementById("{{ adminform.first_field.id_for_label }}").focus();</script>
+        {% endif %}
+
+        {# JavaScript for prepopulated fields #}
+        {% prepopulated_fields_js %}
+
+      </div>
+    </form>
+
+    <div class="modal" id="modal-one">
+        <div class="modal-dialog" style="top: 1%;height: 610px;">
+          <div class="modal-header">
+            <a href="#" onClick="hide()" class="btn-close" aria-hidden="true">×</a>
+          </div>
+          <div class="modal-body">
+            <form action="/document/create_com/" id="modal_form" enctype='multipart/form-data' method="post">
+                {% csrf_token %}
+                <section class="modal-section">
+                  <input type="file" name="file" class="dropify" data-height="150" data-default-file="" />
+                  <div class="form-group">
+                   <label for="" style="text-align:left; margin-top:5px;">Category</label>
+                  <select id="category_sel_ct" class="form-control" name="category" style="background: url(../images/suit_overrides/form-select.png) 100% 50% no-repeat;
+	width: 106%;
+
+	padding: 2px 15px;
+    height: 31px;">
+
+    <option value="">--select--</option>
+                  {% for cat in category %}
+                  <option value="{{cat.pk}}">{{cat.title}}</option>
+                  {% endfor %}
+                  </select>
+                    <label style="text-align:left;" for="">Title</label>
+                    <input id="field_1" maxlength="32" style="width: 100%;border-radius: 0px" name="title" placeholder="Title" required="true" type="text" value="">
+                    <label style="text-align:left;" for="">Description</label>
+                    <textarea id="field_2" maxlength="200" style="width: 100%;border-radius: 0px" name="description" placeholder="Description" required="true" type="text" value=""></textarea>
+                  </div>
+                  <button id="modal_submit" type="submit" style="float: right; margin-right: 30px; width: 100px" class="btn btn-primary btn-def">Create</button>
+                </section>
+
+                <div class="clearfix"></div>
+                <section>
+                  <div class="clearfix"></div>
+                  <div class="progress" style="display:none;height:25px;margin: 10px;">
+                    <div class="progress-bar progress-bar-success progress-bar-striped active" style="text-align:center"></div>
+                  </div>
+                </section>
+              <div class="clearfix"></div>
+          </form>
+          </div>
+        </div>
+      </div>
+
+          <div class="modal" id="modal-one-slider">
+              <div class="modal-dialog">
+                <div class="modal-header">
+                  <a href="#" onClick="hideslider()" class="btn-close" aria-hidden="true">×</a>
+                </div>
+                <div class="modal-body">
+                  <form action="/comsliders/create_com/" id="modal_form_slider" enctype='multipart/form-data' method="post">
+                      {% csrf_token %}
+                      <section class="modal-section">
+                        <input type="file" name="file" class="dropify-slider" data-allowed-file-extensions="jpg jpeg png gif" data-height="150" data-default-file="" />
+
+                        <div class="form-group">
+                    <input type="number" placeholder="Order"  id ="slideorder" name="order" class="form-control" style="width: 100%; margin: 10px 5px; border-radius: 0px"  required />
+                     </div>
+
+
+                      </section>
+
+                      <button id="modal_submit_slider" type="submit" style="float: right; margin-right: 30px; width: 100px" class="btn btn-primary btn-def">Create</button>
+
+
+                      <div class="clearfix"></div>
+                      <section>
+                        <div class="clearfix"></div>
+                        <div class="progress" style="display:none;height:25px;margin: 10px;">
+                          <div class="progress-bar progress-bar-success progress-bar-striped active" style="text-align:center"></div>
+                        </div>
+                      </section>
+                    <div class="clearfix"></div>
+                </form>
+                </div>
+              </div>
+            </div>
+                      <div class="modal" id="modal-one-cat">
+                          <div class="modal-dialog" style="height: 385px">
+                            <div class="modal-header">
+                              <a href="#" onClick="hidecat()" class="btn-close" aria-hidden="true">×</a>
+                            </div>
+                            <div class="modal-body">
+                              <form action="/doccategory/create/" id="modal_form_cat" enctype='multipart/form-data' method="post">
+                                  {% csrf_token %}
+                                  <section class="modal-section">
+                                    <input id="field_1_cat" maxlength="32" style="width: 100%; margin: 10px 5px; border-radius: 0px" name="title" placeholder="Title" required="true" type="text" value="">
+                                    <textarea id="field_2_cat" maxlength="200" style="width: 100%; margin: 5px 5px; border-radius: 0px" name="description" placeholder="Description" required="true" type="text" value=""></textarea>
+                                  </section>
+                                  <button id="modal_submit_cat" type="submit" style="float: right; margin-right: 30px; width: 100px" class="btn btn-primary btn-def">Create</button>
+                                  <div class="clearfix"></div>
+                                  <section>
+                                    <div class="clearfix"></div>
+                                    <div class="progress" style="display:none;height:25px;margin: 10px;">
+                                      <div class="progress-bar progress-bar-success progress-bar-striped active" style="text-align:center"></div>
+                                    </div>
+                                  </section>
+                                <div class="clearfix"></div>
+                            </form>
+                            </div>
+                          </div>
+                        </div>
+
+
+
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
+    <script>
+
+$('.dropify').dropify();
+
+$( document ).ready(function() {
+  function diff_hours(dt2, dt1) {
+    var diff =(dt2.getTime() - dt1.getTime()) / 1000;
+    diff /= (60 * 60);
+    return Math.abs(Math.round(diff));
+  }
+  var serverOffset = -21600;
+  var localNow = new Date();
+  var localOffset = localNow.getTimezoneOffset() * -60;
+  localNow.setTime(localNow.getTime() + 1000 * (serverOffset - localOffset));
+
+  //var time = $("#id_banner-0-end_date_1").val()
+  //var time_2 = $("#id_banner-0-end_date_0").val()
+  var diff = diff_hours(localNow, new Date())
+  var sel = time_2 ;
+  if(sel){
+      var dateTime = new Date(sel);
+  }else{
+      var dateTime = new Date();
+  }
+  dateTime = moment(dateTime)
+  var server_x = dateTime.add(diff, 'hours').format("YYYY-MM-DD HH:mm:ss");
+  var server_d = moment(server_x).format("YYYY-MM-DD");
+  var server_t = moment(server_x).format("HH:mm:ss");
+  //$('#id_banner-0-end_date_1').val(server_t);
+  //$('#id_banner-0-end_date_0').val(server_d);
+});
+
+function requestDate() {
+    var d = new Date(),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+
+    if (month.length < 2) month = '0' + month;
+    if (day.length < 2) day = '0' + day;
+
+    return [year, month, day].join('-');
+}
+
+function checkTime(i) {
+  if (i < 10) {
+    i = "0" + i;
+  }
+  return i;
+}
+
+function startTime() {
+  var today = new Date();
+  var h = today.getHours();
+  var m = today.getMinutes();
+  var s = today.getSeconds();
+  // add a zero in front of numbers<10
+  m = checkTime(m);
+  s = checkTime(s);
+  return  h + ":" + m + ":" + s;
+
+}
+
+
+if($("#id_banner-0-end_date_0").val()==''){
+  var tm=startTime();
+  $("#id_banner-0-end_date_0").val(requestDate())
+  $("#id_banner-0-end_date_1").val(tm)
+
+  $('#time_1').val(tm);
+  $('#time_2').val(requestDate());
+}
+
+
+
+$(document).on("click", ".action-delete", function () {
+  url = this.dataset.url
+  $.post(url, {
+    csrfmiddlewaretoken: $('meta[name=csrftoken]').attr("content")
+  })
+  location.reload()
+});
+
+$(document).on("click", ".action-create", function () {
+  if (window.location.href.indexOf("add") == -1) {
+    $("#modal_form").attr("action", '/document/create/{{com_pk}}/');
+  }else{
+     $("#modal_form").attr("action", '/document/create_com/');
+  }
+
+  $("#modal_submit").text("Create");
+  $("#field_1").val('');
+  $("#field_2").val('');
+  var drEvent = $('.dropify').dropify(
+    {
+      defaultFile: ''
+    });
+    drEvent = drEvent.data('dropify');
+    drEvent.resetPreview();
+    drEvent.clearElement();
+    drEvent.settings.defaultFile = '';
+    drEvent.destroy();
+    drEvent.init();
+
+  show()
+});
+
+$(document).on("click", ".action-create-slider", function () {
+  if (window.location.href.indexOf("add") == -1) {
+    $("#modal_form_slider").attr("action", '/comsliders/create/{{com_pk}}/');
+  }else{
+     $("#modal_form_slider").attr("action", '/comsliders/create_com/');
+  }
+
+  $("#modal_submit_slider").text("Create");
+
+  var drEvent = $('.dropify-slider').dropify(
+    {
+      defaultFile: ''
+    });
+    drEvent = drEvent.data('dropify');
+    drEvent.resetPreview();
+    drEvent.clearElement();
+    drEvent.settings.defaultFile = '';
+    drEvent.destroy();
+    drEvent.init();
+
+  showslider()
+});
+
+
+$(document).on("click", ".action-create-cat", function () {
+  if (window.location.href.indexOf("add") == -1) {
+    $("#modal_form_cat").attr("action", '/doccategory/create/');
+  }else{
+     $("#modal_form_cat").attr("action", '/doccategory/create/');
+  }
+
+  $("#modal_submit_cat").text("Create");
+
+  showcat()
+});
+
+
+
+function show(){
+  $('#modal-one .modal-dialog').show();
+ $('#modal-one').show();
+}
+function hide(){
+  $('#modal-one .modal-dialog').hide();
+ $('#modal-one').hide();
+}
+
+
+function showslider(){
+  $('#modal-one-slider .modal-dialog').show();
+  $('#modal-one-slider').show();
+}
+
+function hideslider(){
+  $('#modal-one-slider .modal-dialog').hide();
+  $('#modal-one-slider').hide();
+}
+
+function showcat(){
+  $('#modal-one-cat .modal-dialog').show();
+  $('#modal-one-cat').show();
+}
+
+function hidecat(){
+  $('#modal-one-cat .modal-dialog').hide();
+  $('#modal-one-cat').hide();
+}
+
+$(document).on("click", ".action-edit", function () {
+  url = this.dataset.url
+  title = this.dataset.title
+  description = this.dataset.description
+  var category= this.dataset.category
+  full_url = this.dataset.edit + '{{ com_pk }}' + '/'
+  show()
+  $("#modal_form").attr("action", full_url);
+  $("#field_1").val(title);
+  $("#field_2").val(description);
+  $("#category_sel_ct").val(category)
+  var drEvent = $('.dropify').dropify(
+    {
+      defaultFile: url
+    });
+    drEvent = drEvent.data('dropify');
+    drEvent.resetPreview();
+    drEvent.clearElement();
+    drEvent.settings.defaultFile = url;
+    drEvent.destroy();
+    drEvent.init();
+
+  $("#modal_submit").text("Edit");
+});
+
+
+
+$(document).on("click", ".action-edit-slider", function () {
+  url = this.dataset.url
+  var order= this.dataset.order
+  full_url = this.dataset.edit + '{{ com_pk }}' + '/'
+  $("#slideorder").val(order);
+  showslider()
+  $("#modal_form_slider").attr("action", full_url);
+  var drEvent = $('.dropify-slider').dropify(
+    {
+      defaultFile: url
+    });
+    drEvent = drEvent.data('dropify');
+    drEvent.resetPreview();
+    drEvent.clearElement();
+    drEvent.settings.defaultFile = url;
+    drEvent.destroy();
+    drEvent.init();
+
+  $("#modal_submit_slider").text("Edit");
+});
+
+
+(function() {
+  var bar = $('.progress-bar');
+  $('#modal_form').ajaxForm({
+  beforeSend: function() {
+    var percentVal = '0%';
+    bar.width(percentVal)
+    $(".progress").show();
+    $("#modal_submit").prop("disabled",true);
+    bar.html(percentVal);
+  },
+  uploadProgress: function(event, position, total, percentComplete) {
+    var percentVal = percentComplete + '%';
+    bar.width(percentVal)
+    bar.html(percentVal);
+  },
+  success: function(data) {
+    var percentVal = '100%';
+    bar.width(percentVal)
+    bar.html(percentVal);
+    $('button[name="_continue"]').click();
+
+  },
+  complete: function(xhr) {
+		$('button[name="_continue"]').click();
+	}
+  });
+
+})();
+
+
+(function() {
+  var bar = $('.progress-bar');
+  $('#modal_form_slider').ajaxForm({
+  beforeSend: function() {
+    var percentVal = '0%';
+    bar.width(percentVal)
+    $(".progress").show();
+    $("#modal_submit_slider").prop("disabled",true);
+    bar.html(percentVal);
+  },
+  uploadProgress: function(event, position, total, percentComplete) {
+    var percentVal = percentComplete + '%';
+    bar.width(percentVal)
+    bar.html(percentVal);
+  },
+  success: function(data) {
+    var percentVal = '100%';
+    bar.width(percentVal)
+    bar.html(percentVal);
+   $('button[name="_continue"]').click();
+  },
+  complete: function(xhr) {
+		$('button[name="_continue"]').click();
+	}
+  });
+})();
+
+
+
+(function() {
+  var bar = $('.progress-bar');
+  $('#modal_form_cat').ajaxForm({
+  beforeSend: function() {
+  },
+  uploadProgress: function(event, position, total, percentComplete) {
+  },
+  success: function(data) {
+   $('button[name="_continue"]').click();
+  },
+  complete: function(xhr) {
+		$('button[name="_continue"]').click();
+	}
+  });
+})();
+
+
+$(document).on("click", ".action-edit-cat", function () {
+  url = this.dataset.url
+  title = this.dataset.title
+  description = this.dataset.description
+  full_url = this.dataset.edit + '{{ com_pk }}' + '/'
+  showcat()
+  $("#modal_form_cat").attr("action", full_url);
+  $("#field_1_cat").val(title);
+  $("#field_2_cat").val(description);
+  $("#modal_submit_cat").text("Edit");
+});
+</script>
+{% endblock %}
+
+{# Empty centered sidebar as now we use sidebar in content block#}
+{% block sidebar_content %}{% endblock %}

@@ -1,0 +1,415 @@
+{% extends 'detail_pages/col_free.html' %}
+{% load front_tags %}
+{% load staticfiles %}
+
+{% block extra-head %}
+    {{ block.super }}
+    <link type="text/css" rel="stylesheet" href="{% static "questions/css/questions.css" %}">
+{% endblock %}
+
+
+{% block detail-content-left %}
+
+<div id="in-page-nav" class="col-md-10">
+    <ul class="no-list">
+        <li class="top-level list-header">Homeowners</li>
+        <li class="">
+            <a class="first" href="/homeowners-neighborhoods">
+                Neighborhoods
+            </a>
+        </li>
+        <li class="">
+            <a class="first" href="{% url 'violation_view' %}">
+                Report a Violation
+            </a>
+        </li>
+        <li class="">
+            <a class="" href="{% url 'maintenance_view' %}">
+                Maintenance Request
+            </a>
+        </li>
+        <li class="active">
+            <a class="last" href="{% url 'review_view' %}">
+                Arc Review Request
+            </a>
+        </li>
+    </ul>
+</div>
+
+{% endblock %}
+
+
+{% block detail-content-right %}
+
+<style>
+    textarea {
+        height: 130px;
+    }
+</style>
+<form id="regForm" action="" enctype="multipart/form-data" method="POST">{% csrf_token %}
+
+    <div class="tab">
+        <div class="form-group">
+            <label>{{ form.neighborhood.label }}</label>
+            <p id="sel_val" style="display:none; color: red;">Select value</p>
+            {{ form.neighborhood }}
+        </div>
+        <!-- <div class="form-group">
+            <label>{{ form.info.label }}</label>
+            <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+            {{ form.info }}
+        </div> -->
+        <div class="form-group">
+            <label>{{ form.name.label }}</label>
+            <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+            {{ form.name }}
+        </div>
+        <div class="form-group">
+            <label>{{ form.address.label }}</label>
+            <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+            {{ form.address }}
+        </div>
+        <div class="form-group">
+            <label>{{ form.phone.label }}</label>
+            <p id="err_phone" style="display:none; color: red;">Invalid phone. Valid formats: (123) 456-7890, 1234567890</p>
+            <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+            {{ form.phone }}
+        </div>
+        <div class="form-group">
+            <label>{{ form.email.label }}</label>
+            <p id="err_email" style="display:none; color: red;">Invalid email</p>
+            <p class="err" style="display:none; color: red;">This field cannot be empty</p>
+            {{ form.email }}
+        </div> 
+    <input name="type" type="hidden" value="review">
+    </div>
+
+<div class="tab">
+    <div class="form-group">
+        <label for="1518345596">What would you like to submit to the Architectural Review Committee?</label>
+        <div class="form-group cho-margin">
+            <div class="radio">
+                <label>
+                    <input type="radio" class="ch" name="What would you like to submit to the Architectural Review Committee?" value="Shed" required>
+                    Shed Installation
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" class="ch" name="What would you like to submit to the Architectural Review Committee?" value="Fence" required>
+                    Fence (new or replace existing)
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" class="ch" name="What would you like to submit to the Architectural Review Committee?" value="Pool" required>
+                    Pool or Pool house
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" class="ch" name="What would you like to submit to the Architectural Review Committee?" value="Landscaping" required>
+                    Landscaping
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" class="ch" name="What would you like to submit to the Architectural Review Committee?" value="Playground" required>
+                    Playground and Trampoline
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" class="ch" name="What would you like to submit to the Architectural Review Committee?" value="Remodel" required>
+                    Remodel or Home Addition
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" class="ch" name="What would you like to submit to the Architectural Review Committee?" value="Pergola" required>
+                    Pergola
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" class="ch" name="What would you like to submit to the Architectural Review Committee?" value="Solar" required>
+                    Solar Panels
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" class="ch" name="What would you like to submit to the Architectural Review Committee?" value="Exterior" required>
+                    Exterior Paint
+                </label>
+            </div>
+            <div class="radio">
+                <label>
+                    <input type="radio" id="custom_input" data-hx="true" class="ch" name="What would you like to submit to the Architectural Review Committee?" value="other" required>
+                </label>
+                <input type="text" class="custom-input" onfocus="this.placeholder = ''" name="What would you like to submit to the Architectural Review Committee?" placeholder="custom value">
+            </div>
+            <p id="che_val" style="display:none; color: red;">Select value</p>
+        </div>
+    </div>
+</div>
+
+<div class="tab" id="third">
+    <div id="Shed" class="qblock">
+        <div class="form-group">
+            <label for="134626640">Shed Review</label>
+            <div class="form-group">
+                <p class="help-block">If you are planning to build or install a shed, please provide as much information as possible so your ARC Board can review and respond to your request in a timely manner. </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="If you are planning to build or install a shed, please provide as much information as possible so your ARC Board can review and respond to your request in a timely manner.">Comments &amp; Questions</label>
+            <div class="form-group">
+                <p class="help-block">If you have any comments or questions, please list them below.</p>
+                <textarea id="1491282482" name="If you are planning to build or install a shed, please provide as much information as possible so your ARC Board can review and respond to your request in a timely manner." class="form-control" ></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="778127909">Please attach the dimensions (length, width and height), material list (roof material), site location (sketch) and picture.</label>
+            <div class="form-group">
+                <input type="file" id="file" name="file" accept="image/*" multiple>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="1805004537">(For non-gmail users, please email this information to carolina@realclearneighborhoods.com)</label>
+        </div>
+    </div>
+
+    <div id="Fence" class="qblock">
+        <div class="form-group">
+            <label for="121806433">Fence (new or replace existing)</label>
+            <div class="form-group">
+                <p class="help-block">If you are planning to install or replace a fence, please provide as much information as possible so your ARC Board can review and respond to your request in a timely manner.</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="If you are planning to install or replace a fence, please provide as much information as possible so your ARC Board can review and respond to your request in a timely manner.">Comments &amp; Questions</label>
+            <div class="form-group">
+                <p class="help-block">If you have any comments or questions, please list them below.</p>
+                <textarea id="765228743" name="If you are planning to install or replace a fence, please provide as much information as possible so your ARC Board can review and respond to your request in a timely manner." class="form-control" ></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="1207014894">Please provide the fence layout and plans </label>
+            <div class="form-group">
+                <input type="file" id="file" name="file" accept="image/*" multiple>
+            </div>
+        </div>
+    </div>
+
+    <div id="Pool" class="qblock">
+        <div class="form-group">
+            <label for="1745883482">Pool or Pool House</label>
+            <div class="form-group">
+                <p class="help-block">If you are planning to install a pool and/or construct a pool house, please provide as much information as possible so your ARC Board can review and respond to your request in a timely manner. </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="If you are planning to install a pool and/or construct a pool house, please provide as much information as possible so your ARC Board can review and respond to your request in a timely manner.">Comments &amp; Questions</label>
+            <div class="form-group">
+                <p class="help-block">If you have any comments or questions, please list them below.</p>
+                <textarea id="151041726" name="If you are planning to install a pool and/or construct a pool house, please provide as much information as possible so your ARC Board can review and respond to your request in a timely manner." class="form-control" ></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="1855031311">Please attach the pool layout and site plan from the pool install company. </label>
+            <div class="form-group">
+                <input type="file" id="file" name="file" accept="image/*" multiple>
+            </div>
+        </div>
+    </div>
+
+    <div id="Landscaping" class="qblock">
+        <div class="form-group">
+            <label for="512434617">Landscaping</label>
+            <div class="form-group">
+                <p class="help-block">If you are planning to change or add to your landscaping, please provide as much information as possible so your ARC Board can review and respond to your request in a timely manner. </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="If you are planning to change or add to your landscaping, please provide as much information as possible so your ARC Board can review and respond to your request in a timely manner.">Comments &amp; Questions</label>
+            <div class="form-group">
+                <p class="help-block">If you have any comments or questions, please list them below.</p>
+                <textarea id="1350764877" name="If you are planning to change or add to your landscaping, please provide as much information as possible so your ARC Board can review and respond to your request in a timely manner." class="form-control" ></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="1075520457">Please provide a copy of the landscaping plan for your project</label>
+            <div class="form-group">
+                <input type="file" id="file" name="file" accept="image/*" multiple>
+            </div>
+        </div>
+    </div>
+
+    <div id="Playground" class="qblock">
+        <div class="form-group">
+            <label for="1857487303">Playground or Trampoline</label>
+            <div class="form-group">
+                <p class="help-block">If you are planning to install a playground or place a trampoline, please provide as much information as possible so your ARC Board can review and respond to your request in a timely manner.</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="If you are planning to install a playground or place a trampoline, please provide as much information as possible so your ARC Board can review and respond to your request in a timely manner.">Comments &amp; Questions</label>
+            <div class="form-group">
+                <p class="help-block">If you have any comments or questions, please list them below.</p>
+                <textarea id="355789520" name="If you are planning to install a playground or place a trampoline, please provide as much information as possible so your ARC Board can review and respond to your request in a timely manner." class="form-control" ></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="1537307095">Please provide a copy of the plans and/or product you intend to install</label>
+            <div class="form-group">
+                <input type="file" id="file" name="file" accept="image/*" multiple>
+            </div>
+        </div>
+    </div>
+
+    <div id="Remodel" class="qblock">
+        <div class="form-group">
+            <label for="2073993415">Remodel or Home Addition</label>
+            <div class="form-group">
+                <p class="help-block">If you are planning to remodel or build on to your home, please provide as much information as possible so your ARC Board can review and respond to your request in a timely manner. </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="If you are planning to remodel or build on to your home, please provide as much information as possible so your ARC Board can review and respond to your request in a timely manner.">Comments &amp; Questions</label>
+            <div class="form-group">
+                <p class="help-block">If you have any comments or questions, please list them below.</p>
+                <textarea id="643449717" name="If you are planning to remodel or build on to your home, please provide as much information as possible so your ARC Board can review and respond to your request in a timely manner." class="form-control" ></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="1382234110">Please submit copies of construction plans, material lists, site plan, and a description of your project. </label>
+            <div class="form-group">
+                <input type="file" id="file" name="file" accept="image/*" multiple>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="580941659">(For non-gmail users, please email this information to carolina@realclearneighborhoods.com)</label>
+            <div class="form-group">
+            </div>
+        </div>
+    </div>
+
+    <div id="Pergola" class="qblock">    
+        <div class="form-group">
+            <label for="2066026434">Pergola</label>
+            <div class="form-group">
+                <p class="help-block">If you are planning to install a pergola, please provide as much information as possible so your ARC Board can review and respond to your request in a timely manner. </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="If you are planning to install a pergola, please provide as much information as possible so your ARC Board can review and respond to your request in a timely manner. ">Comments &amp; Questions</label>
+            <div class="form-group">
+                <p class="help-block">If you have any comments or questions, please list them below.</p>
+                <textarea id="393679572" name="If you are planning to install a pergola, please provide as much information as possible so your ARC Board can review and respond to your request in a timely manner. " class="form-control" ></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="1987949480">Please provide a copy of the plans for the new pergola</label>
+            <div class="form-group">
+                <input type="file" id="file" name="file" accept="image/*" multiple>
+            </div>
+        </div>
+    </div>
+
+    <div id="Solar" class="qblock">  
+        <div class="form-group">
+            <label for="369860333">Solar Panels</label>
+            <div class="form-group">
+                <p class="help-block">If you are planning to install solar panels, please provide as much information as possible so your ARC Board can review and respond to your request in a timely manner. </p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="If you are planning to install solar panels, please provide as much information as possible so your ARC Board can review and respond to your request in a timely manner.">Comments &amp; Questions</label>
+            <div class="form-group">
+                <p class="help-block">If you have any comments or questions, please list them below.</p>
+                <textarea id="229662347" name="If you are planning to install solar panels, please provide as much information as possible so your ARC Board can review and respond to your request in a timely manner." class="form-control" ></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="2128170181">Please submit a copy of the solar panel company&#x27;s location and installation packet. </label>
+            <div class="form-group">
+                <input type="file" id="file" name="file" accept="image/*" multiple>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="572727946">(For non-gmail users, please email this information to carolina@realclearneighborhoods.com)</label>
+            <div class="form-group">
+            </div>
+        </div>
+    </div>
+
+    <div id="Exterior" class="qblock">
+        <div class="form-group">
+            <label for="1426395737">Exterior Paint</label>
+            <div class="form-group">
+                <p class="help-block">If you are planning to paint the exterior of your home, please provide paint color and location so your ARC Board can review and respond to your request in a timely manner.</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="If you are planning to paint the exterior of your home, please provide paint color and location so your ARC Board can review and respond to your request in a timely manner.">Comments &amp; Questions</label>
+            <div class="form-group">
+                <p class="help-block">If you have any comments or questions, please list them below.</p>
+                <textarea id="1941291636" name="If you are planning to paint the exterior of your home, please provide paint color and location so your ARC Board can review and respond to your request in a timely manner." class="form-control" ></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="What paint color will you be using on the exterior of your home?">What paint color will you be using on the exterior of your home?</label>
+            <div class="form-group">
+                <input id="318810144" type="text" name="What paint color will you be using on the exterior of your home?" class="form-control" >
+            </div>
+        </div>
+    </div>
+
+    <div id="Exterior" class="qblock">
+        <div class="form-group">
+            <label for="553998811">Other</label>
+            <div class="form-group">
+                <p class="help-block">Please provide as much information as possible about your request so your ARC Board can review and respond to your request in a timely manner.</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="Please provide as much information as possible about your request so your ARC Board can review and respond to your request in a timely manner.">If your project is not listed, please provide a detailed description of the project you would like reviewed by the ARC Board</label>
+            <div class="form-group">
+                <textarea id="527414141" name="Please provide as much information as possible about your request so your ARC Board can review and respond to your request in a timely manner." class="form-control" required></textarea>
+            </div>
+        </div>
+    </div>   
+</div>
+
+<div class="tab">
+    <div class="form-group">
+        <label for="1601969553">Additional Information</label>
+        <div class="form-group">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="long-text" for="If you have additional information you&#x27;d like to submit, please include below.">If you have additional information you&#x27;d like to submit, please include below. </label>
+        <div class="form-group">
+            <textarea id="1871627663" name="If you have additional information you&#x27;d like to submit, please include below." class="form-control" ></textarea>
+        </div>
+    </div>
+</div>
+
+<div style="overflow:auto;">
+  <div style="float:right;">
+    <button class="btn-info btn" type="button" id="prevBtn" onclick="nextPrev(-1)">Previous</button>
+    <button class="btn-info btn" type="button" id="nextBtn" onclick="nextPrev(1)">Next</button>
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:40px;">
+  <span class="step"></span>
+  <span class="step"></span>
+  <span class="step"></span>
+  <span class="step"></span>
+</div>
+
+</form>
+
+
+{% endblock %}

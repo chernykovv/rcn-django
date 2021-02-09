@@ -1,0 +1,94 @@
+{% extends 'detail_pages/detail_base.html' %}
+{% load front_tags %}
+
+
+{% block detail-content %}
+
+    <div class='container'>
+
+        <div class='row'>
+
+            <div class='col-xs-4'>
+
+                <div id='contact-form-wrapper' class='small-contact-form'>
+                    {% include 'snippets/contact_form.html' %}
+                </div>
+
+            </div>
+
+            <div class='col-xs-1'></div>
+
+            <div id='section-copy-wrapper' class='col-xs-7'>
+
+                <div class='row'>
+
+                    <div class='section-copy col-xs-12'>
+
+                        {% front_edit 'right-section-copy' page.id %}
+
+                            <h2>Lorem ipsum dolor sit amet nihil amisi</h2>
+
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                                labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                                laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+                                voluptate velit esse cillum dolore eu fugiat
+                            </p>
+
+                            <h2>Lorem ipsum dolor sit amet nihil amisi</h2>
+
+                            <p>
+                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+                                labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+                                laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+                                voluptate velit esse cillum dolore eu fugiat
+                            </p>
+
+                        {% end_front_edit %}
+
+                        <div class='clearfix'></div>
+
+                        {% ifequal template_add_on 'proposal' %}
+                            <div id='template-add-on'>
+
+                                <div id='proposal-form-wrapper' class='large-form'>
+                                    {% include 'snippets/proposal_form.html' %}
+                                </div>
+
+                            </div>
+                        {% endifequal %}
+
+                        <div class='clearfix'></div>
+
+                        {% ifequal template_add_on 'faq' %}
+                            <div id='template-add-on'>
+
+                                {% include 'snippets/faq_addon.html' %}
+
+                            </div>
+                        {% endifequal %}
+
+                        <div class='clearfix'></div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+
+{% block user-actions %}
+
+    {{ block.super }}
+
+    <span class='left'>
+        <a onclick='displaySuccess();'>edit success message</a>
+    </span>
+
+{% endblock %}

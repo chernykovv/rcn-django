@@ -1,0 +1,75 @@
+{% extends 'detail_pages/detail_base.html' %}
+{% load front_tags %}
+
+
+{% block detail-content %}
+
+    <div class='container'>
+
+        <div class='row'>
+
+            <div class='col-xs-12'>
+
+                {% for section in page.sections %}
+
+                    {% if forloop.first %}
+                        <div class='row'>
+                    {% endif %}
+
+                        <div class='section-wrapper landing-section col-xs-6'>
+
+                            <div class='row'>
+
+                                {% if section.image %}
+                                    <div class='landing-section-image col-xs-3'>
+
+                                        <img src='{{ section.image }}'>
+
+                                    </div>
+                                {% endif %}
+
+                                <div class='landing-section-copy col-xs-9'>
+
+                                    {% front_edit 'landing-section-copy-col' section.id %}
+
+                                        <h2>Lorem ipsum</h2>
+
+                                        <p>
+                                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+                                            minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
+                                        </p>
+
+                                        <p class='btn info'><a href='/'>Find out more</a></p>
+
+
+                                    {% end_front_edit %}
+
+                                    <div class='clearfix'></div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        {% if forloop.counter|divisibleby:'2' %}
+                            </div>
+                        {% endif %}
+
+                        {% if forloop.counter|divisibleby:'2' and not forloop.last %}
+                            <div class='row'>
+                        {% endif %}
+
+                        {% if forloop.last %}
+                            </div>
+                        {% endif %}
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
